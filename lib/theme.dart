@@ -4,6 +4,7 @@ import 'package:myfm_app/constants.dart';
 ThemeData theme() {
   return ThemeData(
     scaffoldBackgroundColor: Colors.white,
+    colorScheme: ThemeData().colorScheme.copyWith(primary: kPrimaryColor),
     fontFamily: "Muli",
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
@@ -14,16 +15,17 @@ ThemeData theme() {
 
 InputDecorationTheme inputDecorationTheme() {
   OutlineInputBorder outlineInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(18.0),
-      borderSide: const BorderSide(color: kTextColor),
-      gapPadding: 10.0,
-    );
+    borderRadius: BorderRadius.circular(18.0),
+    borderSide: const BorderSide(color: kTextColor),
+    gapPadding: 10.0,
+  );
   return InputDecorationTheme(
     // floatingLabelBehavior: FloatingLabelBehavior.always,
     contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,
     border: outlineInputBorder,
+    errorStyle: const TextStyle(height: 0),
     filled: true,
     fillColor: Colors.white,
   );

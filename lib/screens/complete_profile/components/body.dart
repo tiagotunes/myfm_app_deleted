@@ -18,7 +18,7 @@ class Body extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.screenHeight * 0.02),
               Text(
-                'Complete Profile',
+                'Create Profile',
                 style: headingStyle,
               ),
               const Text(

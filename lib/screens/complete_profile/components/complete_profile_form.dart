@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/screens/success_profile/success_profile_screen.dart';
 import 'package:myfm_app/size_config.dart';
 
 class CompleteProfileForm extends StatefulWidget {
@@ -15,12 +16,11 @@ class CompleteProfileForm extends StatefulWidget {
 
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final _formKey = GlobalKey<FormState>();
-  String fullName = "";
-  String country = "";
-  String birthdate = "";
+  final nameCtr = TextEditingController();
   final countryCtr = TextEditingController();
   final birthdateCtr = TextEditingController();
   final List<String> errors = [];
+  // UnfocusDisposition disposition = UnfocusDisposition.scope;
 
   void addError(String error) {
     if (!errors.contains(error)) {
@@ -67,7 +67,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             },
             readOnly: true,
             controller: birthdateCtr,
-            onSaved: (newValue) => birthdate = newValue!,
             onChanged: (value) {
               errors.clear();
               if (value.isNotEmpty) {
@@ -82,19 +81,24 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
               return null;
             },
             decoration: const InputDecoration(
-              labelText: 'Birthdate',
-              hintText: 'Enter your birthdate',
+              labelText: 'Birth date',
+              hintText: 'Enter your birth date',
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: Icon(Icons.calendar_today_outlined),
             ),
           ),
+          SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(40)),
+          SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
             text: 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
-                // TBD
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  SuccessProfileScreen.routeName,
+                  (Route<dynamic> route) => false,
+                );
               }
             },
           )
@@ -117,7 +121,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             showStates: false,
             showCities: false,
             onCountryChanged: (c) {
-              country = c;
               countryCtr.text = c;
               removeError(kCountryNullError);
             },
@@ -165,7 +168,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildNameFormField() {
     return TextFormField(
-      onSaved: (newValue) => fullName = newValue!,
       onChanged: (value) {
         errors.clear();
         if (value.isNotEmpty) {
@@ -179,6 +181,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         }
         return null;
       },
+      controller: nameCtr,
       decoration: const InputDecoration(
         labelText: 'Name',
         hintText: 'Enter your name',
