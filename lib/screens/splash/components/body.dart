@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:myfm_app/screens/splash/components/splash_content.dart';
+import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
 class Body extends StatefulWidget {
@@ -13,6 +15,18 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  List<User>? users;
+
+  @override
+  void initState() {
+    super.initState();
+    checkUsers();
+  }
+
+  Future checkUsers() async {
+    users = await DatabaseHelper.getAllUsers();
+  }
+
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
@@ -70,7 +84,13 @@ class _BodyState extends State<Body> {
                     DefaultButton(
                       text: 'Continue',
                       press: () {
-                        Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                        // print(users!.isEmpty);
+                        if (users!.isNotEmpty) {
+                          // TBD
+                        } else {
+                          Navigator.pushNamed(
+                              context, CompleteProfileScreen.routeName);
+                        }
                       },
                     ),
                     const Spacer(),

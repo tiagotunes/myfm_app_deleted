@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/success_profile/success_profile_screen.dart';
+import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
 class CompleteProfileForm extends StatefulWidget {
@@ -94,10 +96,12 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
+                User user = User(name: nameCtr.text, country: countryCtr.text, birthdate: birthdateCtr.text);
+                DatabaseHelper.addUser(user);
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   SuccessProfileScreen.routeName,
-                  (Route<dynamic> route) => false,
+                  ModalRoute.withName('/'),
                 );
               }
             },
