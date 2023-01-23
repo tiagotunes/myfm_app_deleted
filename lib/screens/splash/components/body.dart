@@ -3,6 +3,7 @@ import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
+import 'package:myfm_app/screens/home/home_screen.dart';
 import 'package:myfm_app/screens/splash/components/splash_content.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
@@ -85,8 +86,13 @@ class _BodyState extends State<Body> {
                       text: 'Continue',
                       press: () {
                         // print(users!.isEmpty);
-                        if (users!.isNotEmpty) {
-                          // TBD
+                        if (users != null && users!.isNotEmpty) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            HomeScreen.routeName,
+                            ModalRoute.withName('/'),
+                            arguments: {'user': users![0]},
+                          );
                         } else {
                           Navigator.pushNamed(
                               context, CompleteProfileScreen.routeName);
