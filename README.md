@@ -29,5 +29,5 @@ When you open the app for the first time, the first thing you need to do is to c
         id INTEGER PRIMARY KEY, 
         name TEXT NOT NULL, 
         country TEXT NOT NULL, 
-        birthDate TEXT NOT NULL
+        birthdate TEXT NOT NULL
     );

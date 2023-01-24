@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/profile/components/profile_menu.dart';
+import 'package:myfm_app/screens/profile/components/profile_picture.dart';
+import 'package:myfm_app/screens/splash/splash_screen.dart';
+import 'package:myfm_app/services/database_helper.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -13,38 +17,35 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 115,
-          width: 115,
-          child: Stack(
-            fit: StackFit.expand,
-            clipBehavior: Clip.none,
-            children: [
-              const CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/default_user.png'),
-              ),
-              Positioned(
-                right: -12,
-                bottom: 0,
-                child: SizedBox(
-                    height: 46,
-                    width: 46,
-                    child: FittedBox(
-                      child: FloatingActionButton(
-                        elevation: 2,
-                        backgroundColor: const Color(0xFFF5F6F9),
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.image,
-                          color: kSecondaryColor,
-                        ),
-                      ),
-                    )),
-              ),
-            ],
-          ),
-        )
+        const ProfilePic(),
+        const SizedBox(height: 20),
+        ProfileMenu(
+          icon: Icons.edit_outlined,
+          text: 'Edit profile',
+          press: () {},
+        ),
+        ProfileMenu(
+          icon: Icons.download_outlined,
+          text: 'Extract database',
+          press: () {},
+        ),
+        ProfileMenu(
+          icon: Icons.upload_outlined,
+          text: 'Import database',
+          press: () {},
+        ),
+        ProfileMenu(
+          icon: Icons.delete_forever_outlined,
+          text: 'Delete account',
+          press: () {
+            DatabaseHelper.deleteAll();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              SplashScreen.routeName,
+              ModalRoute.withName('/'),
+            );
+          },
+        ),
       ],
     );
   }

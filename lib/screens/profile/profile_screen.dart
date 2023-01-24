@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfm_app/components/custom_bottom_nav_bar.dart';
+import 'package:myfm_app/components/custom_drawer/custom_drawer.dart';
 import 'package:myfm_app/enums.dart';
+import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/profile/components/body.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -9,18 +10,16 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    User user = arguments['user'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
-        leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
       ),
+      drawer: CustomDrawer(user: user, selectMenu: MenuState.profile),
       body: const Body(),
-      bottomNavigationBar: const CustomBottomNavBar(selectMenu: MenuState.profile),
     );
   }
 }

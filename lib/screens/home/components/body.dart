@@ -16,9 +16,9 @@ class _BodyState extends State<Body> {
     return SafeArea(
       child: Column(
         children: [
-          SizedBox(height: getProportionateScreenWidth(10)),
-          const HomeHeader(),
-          SizedBox(height: getProportionateScreenWidth(20)),
+          // SizedBox(height: getProportionateScreenWidth(10)),
+          // const HomeHeader(),
+          // SizedBox(height: getProportionateScreenWidth(20)),
           const FmBanner()
         ],
       ),

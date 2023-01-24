@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:myfm_app/components/custom_bottom_nav_bar.dart';
+import 'package:myfm_app/components/custom_drawer/custom_drawer.dart';
+import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/enums.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/home/components/body.dart';
+import 'package:myfm_app/screens/search/search_screen.dart';
+import 'package:myfm_app/size_config.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = '/home';
@@ -10,12 +13,31 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = (ModalRoute.of(context)?.settings.arguments ??
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    final User user = args['user'];
-    return const Scaffold(
-      body: Body(),
-      bottomNavigationBar: CustomBottomNavBar(selectMenu: MenuState.home),
+    User user = arguments['user'];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'MyFM',
+          style: TextStyle(
+            fontSize: getProportionateScreenWidth(25),
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, SearchScreen.routeName);
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
+        centerTitle: true,
+      ),
+      drawer: CustomDrawer(user: user, selectMenu: MenuState.home),
+      body: const Body(),
     );
   }
 }

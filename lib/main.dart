@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfm_app/routes.dart';
-import 'package:myfm_app/screens/profile/profile_screen.dart';
 import 'package:myfm_app/screens/splash/splash_screen.dart';
 import 'package:myfm_app/theme.dart';
 
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: theme(),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: ProfileScreen.routeName,
+      initialRoute: SplashScreen.routeName,
       routes: routes,
     );
   }

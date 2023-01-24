@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/components/default_button.dart';
+import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/home/home_screen.dart';
 import 'package:myfm_app/size_config.dart';
 
@@ -8,6 +9,9 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    User user = arguments['user'];
     return Column(
       children: [
         SizedBox(height: SizeConfig.screenHeight * 0.05),
@@ -45,6 +49,7 @@ class Body extends StatelessWidget {
                 context,
                 HomeScreen.routeName,
                 ModalRoute.withName('/'),
+                arguments: {'user': user},
               );
             },
           ),

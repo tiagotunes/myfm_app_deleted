@@ -58,4 +58,9 @@ class DatabaseHelper {
     }
     return List.generate(maps.length, (index) => User.fromJson(maps[index]));
   }
+
+  static Future<int> deleteAll() async {
+    final db = await _getDB();
+    return await db.delete('Users');
+  }
 }

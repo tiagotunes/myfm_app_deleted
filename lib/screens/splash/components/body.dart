@@ -95,7 +95,9 @@ class _BodyState extends State<Body> {
                           );
                         } else {
                           Navigator.pushNamed(
-                              context, CompleteProfileScreen.routeName);
+                            context,
+                            CompleteProfileScreen.routeName,
+                          );
                         }
                       },
                     ),

@@ -96,12 +96,17 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
-                User user = User(name: nameCtr.text, country: countryCtr.text, birthdate: birthdateCtr.text);
+                User user = User(
+                  name: nameCtr.text,
+                  country: countryCtr.text,
+                  birthdate: birthdateCtr.text,
+                );
                 DatabaseHelper.addUser(user);
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   SuccessProfileScreen.routeName,
                   ModalRoute.withName('/'),
+                  arguments: {'user': user},
                 );
               }
             },
