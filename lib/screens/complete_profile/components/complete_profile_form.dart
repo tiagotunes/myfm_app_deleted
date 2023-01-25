@@ -5,12 +5,15 @@ import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/home/home_screen.dart';
+import 'package:myfm_app/screens/profile/profile_screen.dart';
 import 'package:myfm_app/screens/success_profile/success_profile_screen.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
 class CompleteProfileForm extends StatefulWidget {
-  const CompleteProfileForm({super.key});
+  final User? user;
+  const CompleteProfileForm({super.key, this.user});
 
   @override
   State<CompleteProfileForm> createState() => _CompleteProfileFormState();
@@ -42,6 +45,11 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user != null) {
+      nameCtr.text = widget.user!.name;
+      countryCtr.text = widget.user!.country;
+      birthdateCtr.text = widget.user!.birthdate;
+    }
     return Form(
       key: _formKey,
       child: Column(
@@ -93,21 +101,36 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
-            text: 'Continue',
+            text: widget.user != null ? 'Save' : 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
                 User user = User(
                   name: nameCtr.text,
                   country: countryCtr.text,
                   birthdate: birthdateCtr.text,
+                  id: widget.user!.id,
                 );
-                DatabaseHelper.addUser(user);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  SuccessProfileScreen.routeName,
-                  ModalRoute.withName('/'),
-                  arguments: {'user': user},
-                );
+                if (widget.user != null) {
+                  DatabaseHelper.updateUser(user);
+                  Navigator.pushNamed(
+                    context,
+                    HomeScreen.routeName,
+                    arguments: {'user': user},
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    ProfileScreen.routeName,
+                    arguments: {'user': user},
+                  );
+                } else {
+                  DatabaseHelper.addUser(user);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    SuccessProfileScreen.routeName,
+                    ModalRoute.withName('/'),
+                    arguments: {'user': user},
+                  );
+                }
               }
             },
           )

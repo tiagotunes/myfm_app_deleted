@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
       ),
       drawer: CustomDrawer(user: user, selectMenu: MenuState.profile),
-      body: const Body(),
+      body: Body(user: user),
     );
   }
 }

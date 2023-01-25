@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:myfm_app/screens/profile/components/profile_menu.dart';
 import 'package:myfm_app/screens/profile/components/profile_picture.dart';
 import 'package:myfm_app/screens/splash/splash_screen.dart';
 import 'package:myfm_app/services/database_helper.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  const Body({super.key, this.user});
+  final User? user;
 
   @override
   State<Body> createState() => _BodyState();
@@ -22,7 +24,13 @@ class _BodyState extends State<Body> {
         ProfileMenu(
           icon: Icons.edit_outlined,
           text: 'Edit profile',
-          press: () {},
+          press: () {
+            Navigator.pushNamed(
+              context,
+              CompleteProfileScreen.routeName,
+              arguments: {'user': widget.user},
+            );
+          },
         ),
         ProfileMenu(
           icon: Icons.download_outlined,

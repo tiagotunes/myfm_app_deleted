@@ -2,11 +2,12 @@ class User {
   final int? id;
   final String name, country, birthdate;
 
-  const User(
-      {this.id,
-      required this.name,
-      required this.country,
-      required this.birthdate});
+  const User({
+    this.id,
+    required this.name,
+    required this.country,
+    required this.birthdate,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json['id'],

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_profile/components/complete_profile_form.dart';
 import 'package:myfm_app/size_config.dart';
 
 class Body extends StatelessWidget {
-  const Body({super.key});
+  final User? user;
+  const Body({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +20,24 @@ class Body extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.screenHeight * 0.02),
               Text(
-                'Create Profile',
+                user != null ? 'Edit Profile' : 'Create Profile',
                 style: headingStyle,
               ),
-              const Text(
-                'Complete your Manager details',
+              Text(
+                user != null
+                    ? 'Edit your manager details'
+                    : 'Complete your Manager details',
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.05),
-              const CompleteProfileForm(),
+              CompleteProfileForm(user: user),
               SizedBox(height: SizeConfig.screenHeight * 0.05),
-              const Text(
-                'By continuing you confirm that you agree \nwith our Term and Codition',
-                textAlign: TextAlign.center,
-              ),
+              user != null
+                  ? const SizedBox()
+                  : const Text(
+                      'By continuing you confirm that you agree \nwith our Term and Codition',
+                      textAlign: TextAlign.center,
+                    ),
             ],
           ),
         ),
