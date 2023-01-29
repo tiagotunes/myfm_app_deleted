@@ -72,7 +72,7 @@ class CustomDrawerHeader extends StatelessWidget {
                   Shadow(
                     color: kPrimaryColor.withOpacity(0.1),
                     offset: const Offset(2, 3),
-                    blurRadius: 7,
+                    blurRadius: 5,
                   ),
                 ],
               ),

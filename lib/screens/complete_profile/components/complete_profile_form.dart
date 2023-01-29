@@ -27,6 +27,16 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final List<String> errors = [];
   // UnfocusDisposition disposition = UnfocusDisposition.scope;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.user != null) {
+      nameCtr.text = widget.user!.name;
+      countryCtr.text = widget.user!.country;
+      birthdateCtr.text = widget.user!.birthdate;
+    }
+  }
+
   void addError(String error) {
     if (!errors.contains(error)) {
       setState(() {
@@ -45,11 +55,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.user != null) {
-      nameCtr.text = widget.user!.name;
-      countryCtr.text = widget.user!.country;
-      birthdateCtr.text = widget.user!.birthdate;
-    }
     return Form(
       key: _formKey,
       child: Column(
@@ -104,31 +109,45 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             text: widget.user != null ? 'Save' : 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
-                User user = User(
+                User newUser = User(
                   name: nameCtr.text,
                   country: countryCtr.text,
                   birthdate: birthdateCtr.text,
-                  id: widget.user!.id,
+                  id: widget.user != null ? widget.user!.id : 0,
                 );
                 if (widget.user != null) {
-                  DatabaseHelper.updateUser(user);
-                  Navigator.pushNamed(
-                    context,
-                    HomeScreen.routeName,
-                    arguments: {'user': user},
+                  DatabaseHelper.updateUser(newUser);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: getProportionateScreenHeight(100),
+                        child: Center(
+                          child: Text('ok'),
+                        ),
+                      );
+                    },
                   );
-                  Navigator.pushNamed(
-                    context,
-                    ProfileScreen.routeName,
-                    arguments: {'user': user},
-                  );
+                  Future.delayed(const Duration(seconds: 3), () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      HomeScreen.routeName,
+                      arguments: {'user': newUser},
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      ProfileScreen.routeName,
+                      arguments: {'user': newUser},
+                    );
+                  });
                 } else {
-                  DatabaseHelper.addUser(user);
+                  DatabaseHelper.addUser(newUser);
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     SuccessProfileScreen.routeName,
                     ModalRoute.withName('/'),
-                    arguments: {'user': user},
+                    arguments: {'user': newUser},
                   );
                 }
               }
