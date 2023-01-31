@@ -1,12 +1,14 @@
 class User {
   final int? id;
   final String name, country, birthdate;
+  final String? imgPath;
 
   const User({
     this.id,
     required this.name,
     required this.country,
     required this.birthdate,
+    this.imgPath,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -14,6 +16,7 @@ class User {
         name: json['name'],
         country: json['country'],
         birthdate: json['birthdate'],
+        imgPath: json['imgPath'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -21,5 +24,6 @@ class User {
         'name': name,
         'country': country,
         'birthdate': birthdate,
+        'imgPath': imgPath,
       };
 }

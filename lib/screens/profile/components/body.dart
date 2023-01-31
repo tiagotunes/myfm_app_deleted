@@ -22,7 +22,7 @@ class _BodyState extends State<Body> {
         const ProfilePic(),
         const SizedBox(height: 20),
         ProfileMenu(
-          icon: Icons.edit_outlined,
+          icon: 'assets/icons/user_edit.svg',
           text: 'Edit profile',
           press: () {
             Navigator.pushNamed(
@@ -33,17 +33,7 @@ class _BodyState extends State<Body> {
           },
         ),
         ProfileMenu(
-          icon: Icons.download_outlined,
-          text: 'Extract database',
-          press: () {},
-        ),
-        ProfileMenu(
-          icon: Icons.upload_outlined,
-          text: 'Import database',
-          press: () {},
-        ),
-        ProfileMenu(
-          icon: Icons.delete_forever_outlined,
+          icon: 'assets/icons/user_remove.svg',
           text: 'Delete account',
           press: () {
             DatabaseHelper.deleteAll();
@@ -53,6 +43,16 @@ class _BodyState extends State<Body> {
               ModalRoute.withName('/'),
             );
           },
+        ),
+        ProfileMenu(
+          icon: 'assets/icons/database_export.svg',
+          text: 'Extract database',
+          press: () {},
+        ),
+        ProfileMenu(
+          icon: 'assets/icons/database_import.svg',
+          text: 'Import database',
+          press: () {},
         ),
       ],
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:myfm_app/size_config.dart';
 
 class ProfileMenu extends StatelessWidget {
   const ProfileMenu({
@@ -8,7 +10,8 @@ class ProfileMenu extends StatelessWidget {
     required this.press,
   }) : super(key: key);
 
-  final IconData icon;
+  // final IconData icon;
+  final String icon;
   final String text;
   final VoidCallback press;
 
@@ -27,12 +30,15 @@ class ProfileMenu extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(icon, size: 25),
+              SvgPicture.asset(
+                icon,
+                width: getProportionateScreenWidth(26),
+              ),
               const SizedBox(width: 20),
               Expanded(
                 child: Text(
                   text,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               const Icon(Icons.arrow_forward_ios_outlined, size: 17),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/size_config.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -9,8 +10,8 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 115,
-      width: 115,
+      height: getProportionateScreenWidth(110),
+      width: getProportionateScreenWidth(110),
       child: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
@@ -20,11 +21,11 @@ class ProfilePic extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/default_user.png'),
           ),
           Positioned(
-            right: -12,
+            right: -10,
             bottom: 0,
             child: SizedBox(
-                height: 46,
-                width: 46,
+                height: getProportionateScreenWidth(45),
+                width: getProportionateScreenWidth(45),
                 child: FittedBox(
                   child: FloatingActionButton(
                     elevation: 2,

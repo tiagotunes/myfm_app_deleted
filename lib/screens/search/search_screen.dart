@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/size_config.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -22,8 +23,13 @@ class SearchScreen extends StatelessWidget {
               },
               decoration: InputDecoration(
                 hintText: 'Search',
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: kSecondaryColor.withOpacity(0.5),
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 prefixIcon: const Icon(Icons.search_sharp),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.clear),

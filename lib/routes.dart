@@ -5,6 +5,7 @@ import 'package:myfm_app/screens/profile/profile_screen.dart';
 import 'package:myfm_app/screens/search/search_screen.dart';
 import 'package:myfm_app/screens/splash/splash_screen.dart';
 import 'package:myfm_app/screens/success_profile/success_profile_screen.dart';
+import 'package:myfm_app/screens/teams/teams_screen.dart';
 
 final Map<String, WidgetBuilder> routes =  {
   SplashScreen.routeName:(context) => const SplashScreen(),
@@ -13,4 +14,5 @@ final Map<String, WidgetBuilder> routes =  {
   HomeScreen.routeName:(context) => const HomeScreen(),
   SearchScreen.routeName:(context) => const SearchScreen(),
   ProfileScreen.routeName:(context) => const ProfileScreen(),
+  TeamsScreen.routeName:(context) => const TeamsScreen(),
 };

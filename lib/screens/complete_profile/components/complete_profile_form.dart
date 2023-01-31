@@ -117,17 +117,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 );
                 if (widget.user != null) {
                   DatabaseHelper.updateUser(newUser);
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                        height: getProportionateScreenHeight(100),
-                        child: Center(
-                          child: Text('ok'),
-                        ),
-                      );
-                    },
-                  );
+                  showSaveSuccessModal(context);
                   Future.delayed(const Duration(seconds: 3), () {
                     Navigator.pop(context);
                     Navigator.pushNamed(
@@ -155,6 +145,41 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           )
         ],
       ),
+    );
+  }
+
+  Future<dynamic> showSaveSuccessModal(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: getProportionateScreenHeight(110),
+          child: Column(
+            children: [
+              const Spacer(flex: 2),
+              Icon(
+                Icons.save,
+                size: getProportionateScreenWidth(25),
+              ),
+              const Spacer(),
+              Text(
+                'Your profile was updated successfully',
+                style: TextStyle(
+                  color: kPrimaryColor,
+                  fontSize: getProportionateScreenWidth(16),
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              const Spacer(flex: 2),
+            ],
+          ),
+        );
+      },
     );
   }
 

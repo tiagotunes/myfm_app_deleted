@@ -4,14 +4,14 @@ import 'package:path/path.dart';
 
 class DatabaseHelper {
   static const int _version = 1;
-  static const String _dbName = 'MyFM.db';
+  static const String _dbName = 'myFM.db';
 
   static Future<Database> _getDB() async {
     return openDatabase(
       join(await getDatabasesPath(), _dbName),
       onCreate: (db, version) async {
         await db.execute(
-            "CREATE TABLE Users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, birthdate TEXT NOT NULL);");
+            "CREATE TABLE Users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, birthdate TEXT NOT NULL, imgPath TEXT DEFAULT null);");
       },
       version: _version,
     );

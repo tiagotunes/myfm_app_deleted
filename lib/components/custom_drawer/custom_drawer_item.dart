@@ -8,11 +8,13 @@ class DrawerItem extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.press,
+    required this.isSelected,
   }) : super(key: key);
 
   final IconData icon;
   final String text;
   final VoidCallback press;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +28,20 @@ class DrawerItem extends StatelessWidget {
               child: Icon(
                 icon,
                 size: getProportionateScreenWidth(25),
-                color: kPrimaryColor.withOpacity(0.8),
+                color: kPrimaryColor,
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 5,
               child: Text(
                 text,
                 style: TextStyle(
-                    color: kPrimaryColor.withOpacity(0.6),
-                    fontSize: getProportionateScreenWidth(16),
-                    fontWeight: FontWeight.bold),
+                  color: isSelected
+                      ? kPrimaryColor
+                      : kPrimaryColor.withOpacity(0.8),
+                  fontSize: getProportionateScreenWidth(16),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             )
           ],

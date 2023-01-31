@@ -16,12 +16,12 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String country = user.country.split(' ')[0];
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomDrawerHeader(country: country, user: user),
+            CustomDrawerHeader(user: user),
             CustomDrawerListItems(selectMenu: selectMenu, user: user),
           ],
         ),
