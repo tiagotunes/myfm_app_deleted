@@ -32,3 +32,6 @@ final headingStyle = TextStyle(
 const String kNameNullError = "Please enter your name";
 const String kCountryNullError = "Please choose a nation";
 const String kBirthDateNullError = "Please enter your birthdate";
+const String kYearNullError = "Please enter the year of the season";
+const String kYearInvalidError = "Year need to be between 1900 and 2100";
+const String kYearInvalid2Error = "You are to young to manage a team";

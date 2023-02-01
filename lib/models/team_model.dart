@@ -4,7 +4,7 @@ class Team {
   final int year;
   final String? league;
   final int? transferBudget, wageBudget;
-  final String? color, imgPath;
+  final String? color, imgBadgePath, imgStadiumPath;
 
   const Team({
     this.id,
@@ -15,7 +15,8 @@ class Team {
     this.transferBudget,
     this.wageBudget,
     this.color,
-    this.imgPath,
+    this.imgBadgePath,
+    this.imgStadiumPath,
   });
 
   factory Team.fromJson(Map<String, dynamic> json) => Team(
@@ -27,7 +28,8 @@ class Team {
         transferBudget: json['transferBudget'],
         wageBudget: json['wageBudget'],
         color: json['color'],
-        imgPath: json['imgPath'],
+        imgBadgePath: json['imgBadgePath'],
+        imgStadiumPath: json['imgStadiumPath'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +41,7 @@ class Team {
         'transferBudget': transferBudget,
         'wageBudget': wageBudget,
         'color': color,
-        'imgPath': imgPath,
+        'imgBadgePath': imgBadgePath,
+        'imgStadiumPath': imgStadiumPath,
       };
 }

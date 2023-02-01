@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfm_app/components/custom_drawer/custom_drawer.dart';
 import 'package:myfm_app/enums.dart';
 import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/complete_team/complete_team_screen.dart';
 import 'package:myfm_app/screens/search/search_screen.dart';
 import 'package:myfm_app/screens/teams/components/body.dart';
 
@@ -20,7 +21,13 @@ class TeamsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                CompleteTeamScreen.routeName,
+                arguments: {'user': user},
+              );
+            },
             icon: const Icon(Icons.add_moderator_outlined),
           ),
           // IconButton(
