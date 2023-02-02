@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/team_model.dart';
+import 'package:myfm_app/screens/teams/components/team_card.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
@@ -22,67 +23,42 @@ class _BodyState extends State<Body> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return TeamCard(
-                name: snapshot.data![index].name,
-                color: snapshot.data![index].color!,
-              );
-            },
-          );
+          return buildGridView(snapshot);
         } else {
           return Center(
-              child: Text(
-            'No teams in database',
-            style: TextStyle(
-              color: kSecondaryColor.withOpacity(0.8),
-              fontSize: getProportionateScreenWidth(25),
-              fontWeight: FontWeight.bold,
+            child: Text(
+              'No teams in database',
+              style: TextStyle(
+                color: kSecondaryColor.withOpacity(0.8),
+                fontSize: getProportionateScreenWidth(25),
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ));
+          );
         }
       },
     );
   }
-}
 
-class TeamCard extends StatelessWidget {
-  const TeamCard({
-    super.key,
-    required this.name,
-    required this.color,
-  });
-  final String name, color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-      decoration: BoxDecoration(
-        color: Color(int.parse(color)),
-        border: Border.all(color: kSecondaryColor.withOpacity(0.5), width: 2),
-        borderRadius: BorderRadius.circular(16),
+  Padding buildGridView(AsyncSnapshot<List<Team>?> snapshot) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: getProportionateScreenWidth(3),
+        horizontal: getProportionateScreenWidth(5),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            'assets/icons/shield.svg',
-            width: getProportionateScreenWidth(100),
-          ),
-          SizedBox(height: getProportionateScreenHeight(5)),
-          Text(
-            name,
-            // 'Test with a very very very long name',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: kPrimaryColor,
-              fontSize: getProportionateScreenWidth(20),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      child: MasonryGridView.builder(
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        crossAxisSpacing: getProportionateScreenWidth(6),
+        mainAxisSpacing: getProportionateScreenWidth(6),
+        itemCount: snapshot.data!.length,
+        itemBuilder: (context, index) {
+          return TeamCard(
+            name: snapshot.data![index].name,
+            imgPath: snapshot.data![index].imgBadgePath,
+          );
+        },
       ),
     );
   }

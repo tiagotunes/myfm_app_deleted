@@ -1,5 +1,7 @@
 import 'package:csc_picker/csc_picker.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -27,6 +29,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
   final transferBCtr = TextEditingController();
   final wageBCtr = TextEditingController();
   final colorCtr = TextEditingController();
+  final imgPathCtr = TextEditingController();
   final List<String> errors = [];
 
   void addError(String error) {
@@ -47,6 +50,8 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<ColorPickerType, bool> swatchesavailable =
+        <ColorPickerType, bool>{ColorPickerType.accent: false};
     return Form(
       key: _formKey,
       child: Column(
@@ -62,6 +67,51 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           buildTransferBFormField(),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildWageBFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          TextFormField(
+            onTap: () {
+              ColorPicker(
+                pickersEnabled: swatchesavailable,
+                enableShadesSelection: false,
+                hasBorder: true,
+                borderRadius: 12,
+                borderColor: kSecondaryColor,
+                color: colorCtr.text.isEmpty
+                    ? Colors.white
+                    : Color(int.parse(colorCtr.text)),
+                onColorChanged: (Color color) {
+                  setState(() {
+                    colorCtr.text = color.value.toString();
+                  });
+                },
+                actionButtons: const ColorPickerActionButtons(
+                  dialogActionButtons: false,
+                  okButton: true,
+                  closeButton: true,
+                ),
+              ).showPickerDialog(context);
+            },
+            readOnly: true,
+            controller: colorCtr,
+            style: TextStyle(
+              color: colorCtr.text.isEmpty
+                  ? kSecondaryColor
+                  : Color(int.parse(colorCtr.text)),
+            ),
+            decoration: InputDecoration(
+              labelText: 'Color',
+              hintText: 'Choose your team color',
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Icon(
+                Icons.format_color_fill_outlined,
+                color: colorCtr.text.isNotEmpty
+                    ? Color(int.parse(colorCtr.text))
+                    : kSecondaryColor,
+              ),
+            ),
+          ),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildBadgeImgFormField(),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -74,8 +124,13 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   country: countryCtr.text,
                   year: int.parse(yearCtr.text),
                   league: leagueCtr.text.isEmpty ? null : leagueCtr.text,
-                  transferBudget: transferBCtr.text.isEmpty ? null : int.parse(transferBCtr.text),
-                  wageBudget: wageBCtr.text.isEmpty ? null : int.parse(wageBCtr.text),
+                  transferBudget: transferBCtr.text.isEmpty
+                      ? null
+                      : int.parse(transferBCtr.text),
+                  wageBudget:
+                      wageBCtr.text.isEmpty ? null : int.parse(wageBCtr.text),
+                  imgBadgePath:
+                      imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
                 );
                 DatabaseHelper.addTeam(newTeam);
                 Navigator.pushNamedAndRemoveUntil(
@@ -88,6 +143,26 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  TextFormField buildBadgeImgFormField() {
+    return TextFormField(
+      onTap: () async {
+        XFile? imgFile =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        setState(() {
+          imgPathCtr.text = imgFile!.path;
+        });
+      },
+      readOnly: true,
+      controller: imgPathCtr,
+      decoration: const InputDecoration(
+        labelText: 'Badge',
+        hintText: 'Choose your team badge',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.image_outlined),
       ),
     );
   }
@@ -141,7 +216,9 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         if (int.parse(value) >= 1900 && int.parse(value) <= 2100) {
           removeError(kYearInvalidError);
         }
-        if (int.parse(yearCtr.text) - DateTime.parse(widget.user!.birthdate).year >= 18) {
+        if (int.parse(yearCtr.text) -
+                DateTime.parse(widget.user!.birthdate).year >=
+            18) {
           removeError(kYearInvalid2Error);
         }
       },
@@ -154,7 +231,9 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           addError(kYearInvalidError);
           return "";
         }
-        if (int.parse(yearCtr.text) - DateTime.parse(widget.user!.birthdate).year < 18) {
+        if (int.parse(yearCtr.text) -
+                DateTime.parse(widget.user!.birthdate).year <
+            18) {
           addError(kYearInvalid2Error);
           return "";
         }

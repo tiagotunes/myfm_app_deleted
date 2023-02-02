@@ -41,6 +41,9 @@ dependencies:
   csc_picker: ^0.2.6
   intl: ^0.18.0
   sqflite: ^2.2.3
+  flutter_staggered_grid_view: ^0.6.2
+  image_picker: ^0.8.6+1
+  flex_color_picker: ^3.1.0
 
 dev_dependencies:
   flutter_test:
