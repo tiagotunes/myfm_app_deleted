@@ -50,8 +50,6 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<ColorPickerType, bool> swatchesavailable =
-        <ColorPickerType, bool>{ColorPickerType.accent: false};
     return Form(
       key: _formKey,
       child: Column(
@@ -68,48 +66,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           SizedBox(height: getProportionateScreenHeight(25)),
           buildWageBFormField(),
           SizedBox(height: getProportionateScreenHeight(25)),
-          TextFormField(
-            onTap: () {
-              ColorPicker(
-                pickersEnabled: swatchesavailable,
-                enableShadesSelection: false,
-                hasBorder: true,
-                borderRadius: 12,
-                borderColor: kSecondaryColor,
-                color: colorCtr.text.isEmpty
-                    ? Colors.white
-                    : Color(int.parse(colorCtr.text)),
-                onColorChanged: (Color color) {
-                  setState(() {
-                    colorCtr.text = color.value.toString();
-                  });
-                },
-                actionButtons: const ColorPickerActionButtons(
-                  dialogActionButtons: false,
-                  okButton: true,
-                  closeButton: true,
-                ),
-              ).showPickerDialog(context);
-            },
-            readOnly: true,
-            controller: colorCtr,
-            style: TextStyle(
-              color: colorCtr.text.isEmpty
-                  ? kSecondaryColor
-                  : Color(int.parse(colorCtr.text)),
-            ),
-            decoration: InputDecoration(
-              labelText: 'Color',
-              hintText: 'Choose your team color',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(
-                Icons.format_color_fill_outlined,
-                color: colorCtr.text.isNotEmpty
-                    ? Color(int.parse(colorCtr.text))
-                    : kSecondaryColor,
-              ),
-            ),
-          ),
+          buildColorFormField(context),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildBadgeImgFormField(),
           SizedBox(height: getProportionateScreenHeight(15)),
@@ -129,6 +86,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                       : int.parse(transferBCtr.text),
                   wageBudget:
                       wageBCtr.text.isEmpty ? null : int.parse(wageBCtr.text),
+                  color: colorCtr.text.isEmpty ? null : colorCtr.text,
                   imgBadgePath:
                       imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
                 );
@@ -143,6 +101,58 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  TextFormField buildColorFormField(BuildContext context) {
+    return TextFormField(
+      onTap: () {
+        ColorPicker(
+          customColorSwatchesAndNames: kCustomSwatches,
+          pickersEnabled: const <ColorPickerType, bool>{
+            ColorPickerType.accent: false,
+            ColorPickerType.primary: false,
+            ColorPickerType.custom: true,
+          },
+          enableShadesSelection: false,
+          borderRadius: 8,
+          borderColor: kSecondaryColor,
+          elevation: 3,
+          color: colorCtr.text.isEmpty
+              ? Colors.white
+              : Color(int.parse(colorCtr.text)),
+          onColorChanged: (Color color) {
+            setState(() {
+              colorCtr.text = color.value.toString();
+            });
+          },
+          actionButtons: const ColorPickerActionButtons(
+            dialogActionButtons: false,
+            closeButton: true,
+          ),
+        ).showPickerDialog(context);
+      },
+      readOnly: true,
+      controller: colorCtr,
+      style: TextStyle(
+        color: colorCtr.text.isEmpty ||
+                Color(int.parse(colorCtr.text)) == Colors.white
+            ? kSecondaryColor
+            : Color(int.parse(colorCtr.text)),
+        fontWeight: colorCtr.text.isEmpty ? FontWeight.normal : FontWeight.bold,
+      ),
+      decoration: InputDecoration(
+        labelText: 'Color',
+        hintText: 'Choose your team color',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(
+          Icons.format_color_fill_outlined,
+          color: colorCtr.text.isEmpty ||
+                  Color(int.parse(colorCtr.text)) == Colors.white
+              ? kSecondaryColor
+              : Color(int.parse(colorCtr.text)),
+        ),
       ),
     );
   }

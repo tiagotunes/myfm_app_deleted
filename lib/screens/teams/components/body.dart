@@ -56,6 +56,7 @@ class _BodyState extends State<Body> {
         itemBuilder: (context, index) {
           return TeamCard(
             name: snapshot.data![index].name,
+            color: snapshot.data![index].color!,
             imgPath: snapshot.data![index].imgBadgePath,
           );
         },

@@ -6,11 +6,12 @@ import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/size_config.dart';
 
 class TeamCard extends StatelessWidget {
-  final String name;
+  final String name, color;
   final String? imgPath;
   const TeamCard({
     super.key,
     required this.name,
+    required this.color,
     this.imgPath,
   });
 
@@ -18,10 +19,13 @@ class TeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
+        color: Color(int.parse(color)).withOpacity(0.2),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: kSecondaryColor.withOpacity(0.3),
+          color: Color(int.parse(color)) == Colors.white
+              ? kSecondaryColor.withOpacity(0.3)
+              : Color(int.parse(color)),
           width: 3,
         ),
       ),

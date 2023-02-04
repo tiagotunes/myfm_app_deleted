@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:myfm_app/size_config.dart';
 
@@ -11,6 +12,31 @@ const kPrimaryGradientColor = LinearGradient(
 );
 const kSecondaryColor = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
+
+final Map<ColorSwatch<Object>, String> kCustomSwatches =
+    <ColorSwatch<Object>, String>{
+  ColorTools.createPrimarySwatch(Colors.white): 'White',
+  ColorTools.createPrimarySwatch(Colors.yellow): 'Yellow',
+  ColorTools.createPrimarySwatch(Colors.amber): 'Amber',
+  ColorTools.createPrimarySwatch(Colors.orange): 'Orange',
+  ColorTools.createPrimarySwatch(Colors.deepOrange): 'Deep Orange',
+  ColorTools.createPrimarySwatch(Colors.red): 'Red',
+  ColorTools.createPrimarySwatch(Colors.pink): 'Pink',
+  ColorTools.createPrimarySwatch(Colors.purple): 'Purple',
+  ColorTools.createPrimarySwatch(Colors.deepPurple): 'Deep Purple',
+  ColorTools.createPrimarySwatch(Colors.indigo): 'Indigo',
+  ColorTools.createPrimarySwatch(Colors.lightBlue): 'Light Blue',
+  ColorTools.createPrimarySwatch(Colors.blue): 'Blue',
+  ColorTools.createPrimarySwatch(Colors.cyan): 'Cyan',
+  ColorTools.createPrimarySwatch(Colors.lime): 'Lime',
+  ColorTools.createPrimarySwatch(Colors.lightGreen): 'Light Green',
+  ColorTools.createPrimarySwatch(Colors.green): 'Green',
+  ColorTools.createPrimarySwatch(Colors.teal): 'Teal',
+  ColorTools.createPrimarySwatch(Colors.grey): 'Grey',
+  ColorTools.createPrimarySwatch(Colors.blueGrey): 'Blue Grey',
+  ColorTools.createPrimarySwatch(Colors.brown): 'Brown',
+  ColorTools.createPrimarySwatch(Colors.black): 'Black',
+};
 
 const kAnimationDuration = Duration(milliseconds: 200);
 
