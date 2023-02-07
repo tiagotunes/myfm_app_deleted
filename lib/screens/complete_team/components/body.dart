@@ -27,12 +27,12 @@ class Body extends StatelessWidget {
               ),
               Text(
                 team != null
-                    ? 'Edit your team details'
+                    ? 'Change your team details'
                     : 'Complete your team details',
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.05),
-              CompleteTeamForm(user: user),
+              CompleteTeamForm(user: user, team: team),
               SizedBox(height: SizeConfig.screenHeight * 0.05),
             ],
           ),

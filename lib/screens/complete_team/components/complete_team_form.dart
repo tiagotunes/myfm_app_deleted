@@ -7,6 +7,7 @@ import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/detailed_team/detailed_team_screen.dart';
 import 'package:myfm_app/screens/home/home_screen.dart';
 import 'package:myfm_app/screens/teams/teams_screen.dart';
 import 'package:myfm_app/services/database_helper.dart';
@@ -14,7 +15,8 @@ import 'package:myfm_app/size_config.dart';
 
 class CompleteTeamForm extends StatefulWidget {
   final User? user;
-  const CompleteTeamForm({super.key, this.user});
+  final Team? team;
+  const CompleteTeamForm({super.key, this.user, this.team});
 
   @override
   State<CompleteTeamForm> createState() => _CompleteTeamFormState();
@@ -31,6 +33,23 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
   final colorCtr = TextEditingController();
   final imgPathCtr = TextEditingController();
   final List<String> errors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.team != null) {
+      nameCtr.text = widget.team!.name;
+      countryCtr.text = widget.team!.country;
+      yearCtr.text = widget.team!.year.toString();
+      leagueCtr.text = widget.team!.league!;
+      transferBCtr.text = widget.team!.transferBudget.toString();
+      wageBCtr.text = widget.team!.wageBudget.toString();
+      colorCtr.text = widget.team!.color!;
+      if (widget.team!.imgBadgePath != null) {
+        imgPathCtr.text = widget.team!.imgBadgePath!;
+      }
+    }
+  }
 
   void addError(String error) {
     if (!errors.contains(error)) {
@@ -73,7 +92,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
-            text: 'Continue',
+            text: widget.team != null ? 'Save' : 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
                 Team newTeam = Team(
@@ -89,19 +108,75 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   color: colorCtr.text.isEmpty ? null : colorCtr.text,
                   imgBadgePath:
                       imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
+                  id: widget.team != null ? widget.team!.id : 0,
                 );
-                DatabaseHelper.addTeam(newTeam);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  TeamsScreen.routeName,
-                  ModalRoute.withName(HomeScreen.routeName),
-                  arguments: {'user': widget.user},
-                );
+                if (widget.team != null) {
+                  DatabaseHelper.updateTeam(newTeam);
+                  showSaveSuccessModal(context);
+                  Future.delayed(const Duration(seconds: 3), () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      TeamsScreen.routeName,
+                      ModalRoute.withName(HomeScreen.routeName),
+                      arguments: {'user': widget.user},
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      DetailedTeamScreen.routeName,
+                      arguments: {
+                        'user': widget.user,
+                        'team': newTeam,
+                      },
+                    );
+                  });
+                } else {
+                  DatabaseHelper.addTeam(newTeam);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    TeamsScreen.routeName,
+                    ModalRoute.withName(HomeScreen.routeName),
+                    arguments: {'user': widget.user},
+                  );
+                }
               }
             },
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> showSaveSuccessModal(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: getProportionateScreenHeight(110),
+          child: Column(
+            children: [
+              const Spacer(flex: 2),
+              Icon(
+                Icons.save,
+                size: getProportionateScreenWidth(25),
+              ),
+              const Spacer(),
+              Text(
+                'Your team was updated successfully',
+                style: TextStyle(
+                    color: kPrimaryColor,
+                    fontSize: getProportionateScreenWidth(16),
+                    fontWeight: FontWeight.bold),
+              ),
+              const Spacer(flex: 2),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -168,12 +243,19 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
       },
       readOnly: true,
       controller: imgPathCtr,
-      decoration: const InputDecoration(
-        labelText: 'Badge',
-        hintText: 'Choose your team badge',
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: Icon(Icons.image_outlined),
-      ),
+      decoration: InputDecoration(
+          labelText: 'Badge',
+          hintText: 'Choose your team badge',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: const Icon(Icons.image_outlined),
+          prefixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                imgPathCtr.clear();
+              });
+            },
+            icon: const Icon(Icons.clear_outlined),
+          )),
     );
   }
 

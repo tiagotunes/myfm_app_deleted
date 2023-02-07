@@ -25,7 +25,7 @@ class Body extends StatelessWidget {
               ),
               Text(
                 user != null
-                    ? 'Edit your manager details'
+                    ? 'Change your manager details'
                     : 'Complete your Manager details',
                 textAlign: TextAlign.center,
               ),

@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     User user = arguments['user'];
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'My FM',
           style: TextStyle(
@@ -34,7 +35,6 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.search),
           ),
         ],
-        centerTitle: true,
       ),
       drawer: CustomDrawer(user: user, selectMenu: MenuState.home),
       body: const Body(),

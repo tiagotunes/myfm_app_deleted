@@ -172,7 +172,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 style: TextStyle(
                   color: kPrimaryColor,
                   fontSize: getProportionateScreenWidth(16),
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const Spacer(flex: 2),
