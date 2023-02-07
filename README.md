@@ -32,3 +32,21 @@ When you open the app for the first time, the first thing you need to do is to c
         birthdate TEXT NOT NULL,
         imgPath TEXT DEFAULT null,
     );
+
+
+### Teams
+To create a team, you need to fill some attributtes. The first 3 are required and the rest are optional.  
+
+
+    CREATE TABLE Teams(
+        id INTEGER PRIMARY KEY, 
+        name TEXT NOT NULL, 
+        country TEXT NOT NULL, 
+        year TEXT NOT NULL,
+        league TEXT DEFAULT None NOT NULL,
+        transferBudget INTEGER DEFAULT 0 NOT NULL,
+        wageBudget INTEGER DEFAULT 0 NOT NULL,
+        color TEXT DEFAULT 0xFFFFFFFF NOT NULL,
+        imgBadgePath TEXT,
+        imgStadiumPath TEXT,
+    );

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:myfm_app/screens/complete_team/complete_team_screen.dart';
+import 'package:myfm_app/screens/detailed_team/detailed_team_screen.dart';
 import 'package:myfm_app/screens/home/home_screen.dart';
 import 'package:myfm_app/screens/profile/profile_screen.dart';
 import 'package:myfm_app/screens/search/search_screen.dart';
@@ -17,4 +18,5 @@ final Map<String, WidgetBuilder> routes =  {
   ProfileScreen.routeName:(context) => const ProfileScreen(),
   TeamsScreen.routeName:(context) => const TeamsScreen(),
   CompleteTeamScreen.routeName:(context) => const CompleteTeamScreen(),
+  DetailedTeamScreen.routeName:(context) => const DetailedTeamScreen(),
 };

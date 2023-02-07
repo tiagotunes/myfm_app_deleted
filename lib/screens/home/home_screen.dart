@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'MyFM',
+          'My FM',
           style: TextStyle(
             fontSize: getProportionateScreenWidth(25),
             color: kPrimaryColor,

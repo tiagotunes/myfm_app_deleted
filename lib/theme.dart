@@ -9,7 +9,17 @@ ThemeData theme() {
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
+    dividerTheme: dividerTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+}
+
+DividerThemeData dividerTheme() {
+  return DividerThemeData(
+    color: kSecondaryColor.withOpacity(0.5),
+    thickness: 1,
+    indent: 4,
+    endIndent: 4,
   );
 }
 

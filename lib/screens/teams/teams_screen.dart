@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myfm_app/components/custom_drawer/custom_drawer.dart';
+import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/enums.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_team/complete_team_screen.dart';
-import 'package:myfm_app/screens/search/search_screen.dart';
 import 'package:myfm_app/screens/teams/components/body.dart';
+import 'package:myfm_app/size_config.dart';
 
 class TeamsScreen extends StatelessWidget {
   static String routeName = '/teams';
@@ -17,7 +18,14 @@ class TeamsScreen extends StatelessWidget {
     User user = arguments['user'];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Teams'),
+        title: Text(
+          'My Teams',
+          style: TextStyle(
+            fontSize: getProportionateScreenWidth(25),
+            color: kPrimaryColor.withOpacity(0.7),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -39,7 +47,7 @@ class TeamsScreen extends StatelessWidget {
         ],
       ),
       drawer: CustomDrawer(user: user, selectMenu: MenuState.teams),
-      body: const Body(),
+      body: Body(user: user),
     );
   }
 }
