@@ -118,7 +118,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 if (widget.user != null) {
                   DatabaseHelper.updateUser(newUser);
                   showSaveSuccessModal(context);
-                  Future.delayed(const Duration(seconds: 3), () {
+                  Future.delayed(const Duration(seconds: 2), () {
                     Navigator.pop(context);
                     Navigator.pushNamed(
                       context,

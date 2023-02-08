@@ -99,21 +99,21 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   name: nameCtr.text,
                   country: countryCtr.text,
                   year: int.parse(yearCtr.text),
-                  league: leagueCtr.text.isEmpty ? null : leagueCtr.text,
+                  league: leagueCtr.text.isEmpty ? 'None' : leagueCtr.text,
                   transferBudget: transferBCtr.text.isEmpty
-                      ? null
+                      ? 0
                       : int.parse(transferBCtr.text),
                   wageBudget:
-                      wageBCtr.text.isEmpty ? null : int.parse(wageBCtr.text),
-                  color: colorCtr.text.isEmpty ? null : colorCtr.text,
+                      wageBCtr.text.isEmpty ? 0 : int.parse(wageBCtr.text),
+                  color: colorCtr.text.isEmpty ? '0xFFFFFFFF' : colorCtr.text,
                   imgBadgePath:
                       imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
-                  id: widget.team != null ? widget.team!.id : 0,
+                  id: widget.team != null ? widget.team!.id : null,
                 );
                 if (widget.team != null) {
                   DatabaseHelper.updateTeam(newTeam);
                   showSaveSuccessModal(context);
-                  Future.delayed(const Duration(seconds: 3), () {
+                  Future.delayed(const Duration(seconds: 2), () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       TeamsScreen.routeName,
