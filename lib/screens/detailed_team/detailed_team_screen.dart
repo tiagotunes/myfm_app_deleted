@@ -4,7 +4,7 @@ import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/detailed_team/components/club_body/club_body.dart';
-import 'package:myfm_app/screens/detailed_team/components/club_body/notes_body.dart';
+import 'package:myfm_app/screens/detailed_team/components/notes_body/notes_body.dart';
 import 'package:myfm_app/screens/detailed_team/components/custom_team_popup_menu.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/players_body.dart';
 import 'package:myfm_app/screens/detailed_team/components/staff_body/staff_body.dart';
@@ -21,13 +21,6 @@ class DetailedTeamScreen extends StatefulWidget {
 
 class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
   int _currentIndex = 2;
-  static const List<Widget> _widgetOptions = <Widget>[
-    NotesBody(),
-    StaffBody(),
-    ClubBody(),
-    PlayersBody(),
-    TransfersBody(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +28,19 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
         <String, dynamic>{}) as Map;
     User? user = arguments['user'];
     Team? team = arguments['team'];
+
+    List<Widget> bodyOptions = <Widget>[
+      const NotesBody(),
+      const StaffBody(),
+      ClubBody(team: team!),
+      const PlayersBody(),
+      const TransfersBody(),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          team!.name,
+          team.name,
           style: TextStyle(
             fontSize: getProportionateScreenWidth(20),
             color: kPrimaryColor,
@@ -52,7 +54,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
         ),
         actions: [CustomTeamPopupMenu(user: user!, team: team)],
       ),
-      body: _widgetOptions.elementAt(_currentIndex),
+      body: bodyOptions.elementAt(_currentIndex),
       bottomNavigationBar: buildBottomNavigationBar(team.color!),
     );
   }
@@ -82,8 +84,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
               horizontal: getProportionateScreenWidth(10),
               vertical: getProportionateScreenHeight(15),
             ),
-            tabBackgroundColor:
-                Color(int.parse(color)).withOpacity(0.3),
+            tabBackgroundColor: Color(int.parse(color)).withOpacity(0.3),
             tabBorderRadius: 25,
             tabActiveBorder: Border.all(
               color: Color(int.parse(color)) == Colors.white

@@ -25,14 +25,16 @@ class CustomTeamPopupMenu extends StatelessWidget {
       // offset: Offset(0, getProportionateScreenHeight(45)),
       itemBuilder: (context) {
         return [
-          buildPopupMenuItem(0, Icons.note_add_outlined, 'Add note', true),
-          buildPopupMenuItem(1, Icons.person_add_alt_1, 'Add staff', true),
-          buildPopupMenuItem(2, Icons.person_add_alt_1, 'Add player', true),
-          buildPopupMenuItem(3, Icons.swap_horiz_outlined, 'Add transfer', true),
+          buildPopupMenuItem(0, Icons.note_add, 'Add note', false),
+          buildPopupMenuItem(1, Icons.person_add_alt_1, 'Add staff', false),
+          buildPopupMenuItem(2, Icons.person_add_alt_1, 'Add player', false),
+          buildPopupMenuItem(3, Icons.emoji_events, 'Add trophy', false),
+          buildPopupMenuItem(
+              4, Icons.swap_horiz_outlined, 'Add transfer', false),
           const PopupMenuDivider(),
-          buildPopupMenuItem(4, Icons.edit_outlined, 'Edit team', true),
-          buildPopupMenuItem(5, Icons.share_outlined, 'Share team', false),
-          buildPopupMenuItem(6, Icons.delete_outline, 'Delete team', true),
+          buildPopupMenuItem(5, Icons.edit_outlined, 'Edit team', true),
+          buildPopupMenuItem(6, Icons.share_outlined, 'Share team', false),
+          buildPopupMenuItem(7, Icons.delete_outline, 'Delete team', true),
         ];
       },
       onSelected: (value) {
@@ -43,8 +45,10 @@ class CustomTeamPopupMenu extends StatelessWidget {
         } else if (value == 2) {
           print('Add player');
         } else if (value == 3) {
-          print('Add transfer');
+          print('Add trophy');
         } else if (value == 4) {
+          print('Add transfer');
+        } else if (value == 5) {
           // print('Edit team');
           Navigator.pushNamed(
             context,
@@ -54,9 +58,9 @@ class CustomTeamPopupMenu extends StatelessWidget {
               'team': team,
             },
           );
-        } else if (value == 5) {
-          print('Share team');
         } else if (value == 6) {
+          print('Share team');
+        } else if (value == 7) {
           // print('Delete team');
           DatabaseHelper.deleteTeam(team);
           Navigator.pushNamed(
@@ -74,7 +78,8 @@ class CustomTeamPopupMenu extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<int> buildPopupMenuItem(int value, IconData icon, String text, bool enable) {
+  PopupMenuItem<int> buildPopupMenuItem(
+      int value, IconData icon, String text, bool enable) {
     return PopupMenuItem<int>(
       value: value,
       enabled: enable,

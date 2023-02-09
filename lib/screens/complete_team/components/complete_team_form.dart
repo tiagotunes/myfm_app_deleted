@@ -336,7 +336,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         labelText: 'Year',
         hintText: 'Enter the year of the season',
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: Icon(Icons.calendar_month_outlined),
+        suffixIcon: Icon(Icons.calendar_today_outlined),
       ),
     );
   }
