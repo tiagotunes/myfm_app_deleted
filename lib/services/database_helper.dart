@@ -10,15 +10,26 @@ class DatabaseHelper {
   static Future<Database> _getDB() async {
     return openDatabase(
       join(await getDatabasesPath(), _dbName),
+      version: _version,
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE Users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, birthdate TEXT NOT NULL, imgPath TEXT);",
+          """CREATE TABLE Users(
+            id INTEGER PRIMARY KEY, 
+            name TEXT NOT NULL, country TEXT NOT NULL, birthdate TEXT NOT NULL, 
+            imgPath TEXT
+          );""",
         );
         await db.execute(
-          "CREATE TABLE Teams(id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, year INTEGER NOT NULL, league TEXT DEFAULT None NOT NULL, transferBudget INTEGER DEFAULT 0 NOT NULL, wageBudget INTEGER DEFAULT 0 NOT NULL, color TEXT DEFAULT 0xFFFFFFFF NOT NULL, imgBadgePath TEXT, imgStadiumPath TEXT);",
+          """CREATE TABLE Teams(
+            id INTEGER PRIMARY KEY, 
+            name TEXT NOT NULL, country TEXT NOT NULL, year INTEGER NOT NULL, 
+            league TEXT, stadium TEXT, 
+            transferBudget INTEGER DEFAULT 0 NOT NULL, wageBudget INTEGER DEFAULT 0 NOT NULL, 
+            color TEXT DEFAULT 0xFFFFFFFF NOT NULL, 
+            imgBadgePath TEXT, imgStadiumPath TEXT
+          );""",
         );
       },
-      version: _version,
     );
   }
 
@@ -109,5 +120,5 @@ class DatabaseHelper {
   static Future<int> deleteAll() async {
     final db = await _getDB();
     return await db.delete('Users');
-  }  
+  }
 }

@@ -2,7 +2,7 @@ class Team {
   final int? id;
   final String name, country;
   final int year;
-  final String? league;
+  final String? league, stadium;
   final int? transferBudget, wageBudget;
   final String? color, imgBadgePath, imgStadiumPath;
 
@@ -12,6 +12,7 @@ class Team {
     required this.country,
     required this.year,
     this.league,
+    this.stadium,
     this.transferBudget,
     this.wageBudget,
     this.color,
@@ -25,6 +26,7 @@ class Team {
         country: json['country'],
         year: json['year'],
         league: json['league'],
+        stadium: json['stadium'],
         transferBudget: json['transferBudget'],
         wageBudget: json['wageBudget'],
         color: json['color'],
@@ -38,6 +40,7 @@ class Team {
         'country': country,
         'year': year,
         'league': league,
+        'stadium': stadium,
         'transferBudget': transferBudget,
         'wageBudget': wageBudget,
         'color': color,

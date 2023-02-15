@@ -35,7 +35,7 @@ class ClubBody extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: kSecondaryColor.withOpacity(0.5),
-                  offset: Offset(-3, 3),
+                  offset: const Offset(-3, 3),
                   blurRadius: 5,
                 ),
               ],
@@ -71,7 +71,20 @@ class ClubBody extends StatelessWidget {
                       ),
                       SizedBox(width: getProportionateScreenWidth(8)),
                       Text(
-                        team.league! == 'None' ? '---' : team.league!,
+                        team.league != null ? team.league! : '---',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.stadium_outlined,
+                        color: kSecondaryColor,
+                      ),
+                      SizedBox(width: getProportionateScreenWidth(8)),
+                      Text(
+                        team.stadium != null ? team.stadium! : '---',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

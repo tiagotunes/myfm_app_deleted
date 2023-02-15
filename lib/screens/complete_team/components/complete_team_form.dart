@@ -28,10 +28,13 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
   final countryCtr = TextEditingController();
   final yearCtr = TextEditingController();
   final leagueCtr = TextEditingController();
+  final stadiumCtr = TextEditingController();
   final transferBCtr = TextEditingController();
   final wageBCtr = TextEditingController();
   final colorCtr = TextEditingController();
-  final imgPathCtr = TextEditingController();
+  final imgBadgePathCtr = TextEditingController();
+  final imgStadiumPathCtr = TextEditingController();
+  bool stadiumEnable = false;
   final List<String> errors = [];
 
   @override
@@ -41,12 +44,21 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
       nameCtr.text = widget.team!.name;
       countryCtr.text = widget.team!.country;
       yearCtr.text = widget.team!.year.toString();
-      leagueCtr.text = widget.team!.league!;
+      if (widget.team!.league != null) {
+        leagueCtr.text = widget.team!.league!;
+      }
+      if (widget.team!.stadium != null) {
+        stadiumCtr.text = widget.team!.stadium!;
+        stadiumEnable = true;
+      }
       transferBCtr.text = widget.team!.transferBudget.toString();
       wageBCtr.text = widget.team!.wageBudget.toString();
       colorCtr.text = widget.team!.color!;
       if (widget.team!.imgBadgePath != null) {
-        imgPathCtr.text = widget.team!.imgBadgePath!;
+        imgBadgePathCtr.text = widget.team!.imgBadgePath!;
+      }
+      if (widget.team!.imgStadiumPath != null) {
+        imgStadiumPathCtr.text = widget.team!.imgStadiumPath!;
       }
     }
   }
@@ -81,6 +93,8 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           SizedBox(height: getProportionateScreenHeight(25)),
           buildLeagueFormField(),
           SizedBox(height: getProportionateScreenHeight(25)),
+          buildStadiumFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
           buildTransferBFormField(),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildWageBFormField(),
@@ -88,6 +102,8 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           buildColorFormField(context),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildBadgeImgFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildStadiumImgFormField(),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -99,15 +115,20 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   name: nameCtr.text,
                   country: countryCtr.text,
                   year: int.parse(yearCtr.text),
-                  league: leagueCtr.text.isEmpty ? 'None' : leagueCtr.text,
+                  league: leagueCtr.text.isEmpty ? null : leagueCtr.text,
+                  stadium: stadiumCtr.text.isEmpty ? null : stadiumCtr.text,
                   transferBudget: transferBCtr.text.isEmpty
                       ? 0
                       : int.parse(transferBCtr.text),
                   wageBudget:
                       wageBCtr.text.isEmpty ? 0 : int.parse(wageBCtr.text),
                   color: colorCtr.text.isEmpty ? '0xFFFFFFFF' : colorCtr.text,
-                  imgBadgePath:
-                      imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
+                  imgBadgePath: imgBadgePathCtr.text.isEmpty
+                      ? null
+                      : imgBadgePathCtr.text,
+                  imgStadiumPath: imgStadiumPathCtr.text.isEmpty || !stadiumEnable
+                      ? null
+                      : imgStadiumPathCtr.text,
                   id: widget.team != null ? widget.team!.id : null,
                 );
                 if (widget.team != null) {
@@ -145,7 +166,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
       ),
     );
   }
-
+  
   Future<dynamic> showSaveSuccessModal(BuildContext context) {
     return showModalBottomSheet(
       context: context,
@@ -178,6 +199,35 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         );
       },
     );
+  }
+
+  TextFormField buildStadiumImgFormField() {
+    return TextFormField(
+          onTap: () async {
+            XFile? imgFile =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            setState(() {
+              imgStadiumPathCtr.text = imgFile!.path;
+            });
+          },
+          readOnly: true,
+          controller: imgStadiumPathCtr,
+          enabled: stadiumEnable,
+          decoration: InputDecoration(
+            labelText: 'Stadium',
+            hintText: 'Choose your team stadium',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            suffixIcon: const Icon(Icons.image_outlined),
+            prefixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  imgStadiumPathCtr.clear();
+                });
+              },
+              icon: const Icon(Icons.clear_outlined),
+            ),
+          ),
+        );
   }
 
   TextFormField buildColorFormField(BuildContext context) {
@@ -238,24 +288,25 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         XFile? imgFile =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         setState(() {
-          imgPathCtr.text = imgFile!.path;
+          imgBadgePathCtr.text = imgFile!.path;
         });
       },
       readOnly: true,
-      controller: imgPathCtr,
+      controller: imgBadgePathCtr,
       decoration: InputDecoration(
-          labelText: 'Badge',
-          hintText: 'Choose your team badge',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          suffixIcon: const Icon(Icons.image_outlined),
-          prefixIcon: IconButton(
-            onPressed: () {
-              setState(() {
-                imgPathCtr.clear();
-              });
-            },
-            icon: const Icon(Icons.clear_outlined),
-          )),
+        labelText: 'Badge',
+        hintText: 'Choose your team badge',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: const Icon(Icons.image_outlined),
+        prefixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              imgBadgePathCtr.clear();
+            });
+          },
+          icon: const Icon(Icons.clear_outlined),
+        ),
+      ),
     );
   }
 
@@ -282,6 +333,29 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.attach_money_outlined),
       ),
+    );
+  }
+
+  TextFormField buildStadiumFormField() {
+    return TextFormField(
+      controller: stadiumCtr,
+      decoration: const InputDecoration(
+        labelText: 'Stadium',
+        hintText: 'Enter the stadium of your team',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.stadium_outlined),
+      ),
+      onChanged: (value) {
+        if (value.isEmpty) {
+          setState(() {
+            stadiumEnable = false;
+          });
+        } else {
+          setState(() {
+            stadiumEnable = true;
+          });
+        }
+      },
     );
   }
 
