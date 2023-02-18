@@ -43,10 +43,35 @@ To create a team, you need to fill some attributtes. The first 3 are required an
         name TEXT NOT NULL, 
         country TEXT NOT NULL, 
         year TEXT NOT NULL,
-        league TEXT DEFAULT None NOT NULL,
+        league TEXT,
+        stadium TEXT,
         transferBudget INTEGER DEFAULT 0 NOT NULL,
         wageBudget INTEGER DEFAULT 0 NOT NULL,
         color TEXT DEFAULT 0xFFFFFFFF NOT NULL,
         imgBadgePath TEXT,
         imgStadiumPath TEXT,
     );
+
+---
+
+## Screens
+
+### Home
+
+To be done
+
+### Teams
+
+On going...
+
+### Favourites
+
+To be done
+
+### Settings
+
+To be done
+
+### About us
+
+To be done

@@ -39,6 +39,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           team.name,
           style: TextStyle(
