@@ -27,10 +27,13 @@ class TeamStadium extends StatelessWidget {
                     fit: BoxFit.fitWidth,
                   ),
                 )
-              : SvgPicture.asset(
-                  'assets/icons/image.svg',
-                  height: double.infinity,
-                ),
+              : Opacity(
+                opacity: 0.3,
+                child: SvgPicture.asset(
+                    'assets/icons/stadium.svg',
+                    height: double.infinity,
+                  ),
+              ),
         ),
         SizedBox(height: getProportionateScreenHeight(8)),
         Row(
