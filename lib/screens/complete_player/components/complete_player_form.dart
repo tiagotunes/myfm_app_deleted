@@ -23,7 +23,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final nationCtr = TextEditingController();
   final birthdateCtr = TextEditingController();
   String primaryPosCtr = "";
-  List<String>? secondaryPosCtr;
+  List<dynamic> secondaryPos = [];
   final leftFCtr = TextEditingController();
   final rightFCtr = TextEditingController();
   final heightCtr = TextEditingController();
@@ -68,9 +68,10 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           buildBirthdateFormField(context),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildPrimaryPosFormField(),
-          SizedBox(height: getProportionateScreenHeight(15)),
+          SizedBox(height: getProportionateScreenHeight(10)),
+          buildSecondaryPosInfoText(),
+          SizedBox(height: getProportionateScreenHeight(10)),
           buildFootballField(),
-          SizedBox(height: getProportionateScreenHeight(15)),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -85,6 +86,16 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         ],
       ),
     );
+  }
+
+  Text buildSecondaryPosInfoText() {
+    return Text(
+          "Choose other position(s) by clicking on the dots inside the football field",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: getProportionateScreenWidth(14),
+          ),
+        );
   }
 
   Container buildFootballField() {
@@ -121,19 +132,40 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     return Positioned(
       top: getProportionateScreenHeight(y),
       left: getProportionateScreenWidth(x),
-      child: Container(
-        width: getProportionateScreenWidth(17),
-        height: getProportionateScreenWidth(17),
-        decoration: BoxDecoration(
-          color: primaryPosCtr == pos ? Colors.green : kSecondaryColor,
-          shape: BoxShape.circle,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black38,
-              offset: Offset(-1, 0),
-              blurRadius: 2,
-            )
-          ],
+      child: InkWell(
+        onTap: () {
+          if (primaryPosCtr != pos) {
+            if (!secondaryPos.contains(pos)) {
+              setState(() {
+                secondaryPos.add(pos);
+                print(secondaryPos);
+              });
+            } else {
+              setState(() {
+                secondaryPos.remove(pos);
+                print(secondaryPos);
+              });
+            }
+          }
+        },
+        child: Container(
+          width: getProportionateScreenWidth(17),
+          height: getProportionateScreenWidth(17),
+          decoration: BoxDecoration(
+            color: primaryPosCtr == pos
+                ? Colors.green
+                : secondaryPos.contains(pos)
+                    ? Colors.lightGreen
+                    : kSecondaryColor,
+            shape: BoxShape.circle,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black38,
+                offset: Offset(-1, 0),
+                blurRadius: 2,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -145,7 +177,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         alignedDropdown: true,
         child: DropdownButtonFormField(
           icon: const Icon(Icons.sports_soccer_outlined),
-          hint: const Text("Choose the primary position"),
+          hint: const Text("Choose primary position"),
           menuMaxHeight: getProportionateScreenHeight(400),
           borderRadius: BorderRadius.circular(15),
           items: [

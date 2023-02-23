@@ -61,6 +61,6 @@ const String kBirthDateNullError = "Please enter your birthdate";
 const String kYearNullError = "Please enter the year of the season";
 const String kYearInvalidError = "Year need to be between 1900 and 2100";
 const String kYearInvalid2Error = "You are to young to manage a team";
-const String kPositionNullError = "Please enter player position";
+const String kPositionNullError = "Please choose player position";
 const String kPlayerBirthDateNullError = "Please enter player birthdate";
 const String kPlayerBirthDateInvalidError = "Player is to young to be on the team";
