@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
 import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:myfm_app/screens/complete_team/complete_team_screen.dart';
 import 'package:myfm_app/screens/detailed_team/detailed_team_screen.dart';
@@ -19,4 +20,5 @@ final Map<String, WidgetBuilder> routes =  {
   TeamsScreen.routeName:(context) => const TeamsScreen(),
   CompleteTeamScreen.routeName:(context) => const CompleteTeamScreen(),
   DetailedTeamScreen.routeName:(context) => const DetailedTeamScreen(),
+  CompletePlayerScreen.routeName:(context) => const CompletePlayerScreen(),
 };

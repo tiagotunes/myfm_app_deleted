@@ -63,45 +63,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           buildCountryFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          TextFormField(
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: birthdateCtr.text == ''
-                    ? DateTime.utc(2000)
-                    : DateTime.parse(birthdateCtr.text),
-                firstDate: DateTime.utc(1900),
-                lastDate: DateTime.utc(2100),
-                initialDatePickerMode: DatePickerMode.day,
-              );
-              if (pickedDate != null) {
-                String formattedDate =
-                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                birthdateCtr.text = formattedDate;
-              }
-            },
-            readOnly: true,
-            controller: birthdateCtr,
-            onChanged: (value) {
-              errors.clear();
-              if (value.isNotEmpty) {
-                removeError(kBirthDateNullError);
-              }
-            },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(kBirthDateNullError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: 'Birth date',
-              hintText: 'Enter your birth date',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.calendar_today_outlined),
-            ),
-          ),
+          buildBirthdateFormField(context),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -146,6 +108,48 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         ],
       ),
     );
+  }
+
+  TextFormField buildBirthdateFormField(BuildContext context) {
+    return TextFormField(
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: birthdateCtr.text == ''
+                  ? DateTime.utc(2000)
+                  : DateTime.parse(birthdateCtr.text),
+              firstDate: DateTime.utc(1900),
+              lastDate: DateTime.utc(2100),
+              initialDatePickerMode: DatePickerMode.day,
+            );
+            if (pickedDate != null) {
+              String formattedDate =
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
+              birthdateCtr.text = formattedDate;
+            }
+          },
+          readOnly: true,
+          controller: birthdateCtr,
+          onChanged: (value) {
+            errors.clear();
+            if (value.isNotEmpty) {
+              removeError(kBirthDateNullError);
+            }
+          },
+          validator: (value) {
+            if (value!.isEmpty) {
+              addError(kBirthDateNullError);
+              return "";
+            }
+            return null;
+          },
+          decoration: const InputDecoration(
+            labelText: 'Birth date',
+            hintText: 'Enter your birth date',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            suffixIcon: Icon(Icons.calendar_today_outlined),
+          ),
+        );
   }
 
   Future<dynamic> showSaveSuccessModal(BuildContext context) {

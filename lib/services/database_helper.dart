@@ -1,3 +1,4 @@
+import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -27,6 +28,19 @@ class DatabaseHelper {
             transferBudget INTEGER DEFAULT 0 NOT NULL, wageBudget INTEGER DEFAULT 0 NOT NULL, 
             color TEXT DEFAULT 0xFFFFFFFF NOT NULL, 
             imgBadgePath TEXT, imgStadiumPath TEXT
+          );""",
+        );
+        await db.execute(
+          """CREATE TABLE Players(
+            id INTEGER PRIMARY KEY, teamId INTEGER NOT NULL,
+            name TEXT NOT NULL, nation TEXT NOT NULL, birthdate TEXT NOT NULL,
+            primaryPosition TEXT NOT NULL, secondaryPosition TEXT,
+            leftFoot BOOLEAN NOT NULL, rightFoot BOOLEAN NOT NULL,
+            height INTEGER, number INTEGER,
+            value INTEGER DEFAULT 0 NOT NULL, wage INTEGER DEFAULT 0 NOT NULL, releaseClause INTEGER,
+            ability REAL DEFAULT 0 NOT NULL, potential REAL DEFAULT 0 NOT NULL,
+            isNationalTeam BOOLEAN DEFAULT false NOT NULL, isLoaned BOOLEAN DEFAULT false NOT NULL,
+            loanFrom TEXT, imgPath TEXT
           );""",
         );
       },
@@ -117,8 +131,56 @@ class DatabaseHelper {
     return List.generate(maps.length, (index) => Team.fromJson(maps[index]));
   }
 
+  /////////////
+  // PLAYER //
+  ///////////
+
+  static Future<int> addPlayer(Player player) async {
+    final db = await _getDB();
+    return await db.insert(
+      'Players',
+      player.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<int> updatePlayer(Player player) async {
+    final db = await _getDB();
+    return await db.update(
+      'Players',
+      player.toJson(),
+      where: 'id = ?',
+      whereArgs: [player.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<int> deletePlayer(Player player) async {
+    final db = await _getDB();
+    return await db.delete(
+      'Players',
+      where: 'id = ?',
+      whereArgs: [player.id],
+    );
+  }
+
+  static Future<List<Team>?> getAllPlayersFromTeam(Team team) async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Players',
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    );
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(maps.length, (index) => Team.fromJson(maps[index]));
+  }
+
   static Future<int> deleteAll() async {
     final db = await _getDB();
-    return await db.delete('Users');
+    return await db.delete('Users') +
+        await db.delete('Teams') +
+        await db.delete('Players');
   }
 }
