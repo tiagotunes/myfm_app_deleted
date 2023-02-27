@@ -1,14 +1,14 @@
 class Player {
   final int? id;
-  final int teamId;
+  final int? teamId;
   final String name, nation, birthdate;
   final String primaryPosition;
-  final List<String>? secondaryPosition;
-  final bool leftFoot, rightFoot;
+  final String? secondaryPosition;
+  final int? leftFoot, rightFoot;
   final int? height, number;
   final int? value, wage, releaseClause;
   final double? ability, potential;
-  final bool? isNationalTeam, isLoaned;
+  final int? isNationalTeam, isLoaned;
   final String? loanFrom;
   final String? imgPath;
 

@@ -33,7 +33,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
       const NotesBody(),
       const StaffBody(),
       ClubBody(team: team!),
-      const PlayersBody(),
+      PlayersBody(team: team),
       const TransfersBody(),
     ];
 

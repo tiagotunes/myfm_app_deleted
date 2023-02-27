@@ -1,11 +1,20 @@
+import 'dart:convert';
+import 'dart:math' as math;
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
+import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/detailed_team/detailed_team_screen.dart';
+import 'package:myfm_app/screens/home/home_screen.dart';
+import 'package:myfm_app/screens/teams/teams_screen.dart';
+import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
 class CompletePlayerForm extends StatefulWidget {
@@ -22,10 +31,10 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final nameCtr = TextEditingController();
   final nationCtr = TextEditingController();
   final birthdateCtr = TextEditingController();
-  String primaryPosCtr = "";
+  final primaryPosCtr = TextEditingController();
   List<dynamic> secondaryPos = [];
-  final leftFCtr = TextEditingController();
-  final rightFCtr = TextEditingController();
+  bool leftFoot = false;
+  bool rightFoot = false;
   final heightCtr = TextEditingController();
   final numberCtr = TextEditingController();
   final valueCtr = TextEditingController();
@@ -33,6 +42,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final releaseClauseCtr = TextEditingController();
   final abilityCtr = TextEditingController();
   final potentialCtr = TextEditingController();
+
   final isNationalTCtr = TextEditingController();
   final isLoanedCtr = TextEditingController();
   final loanFromCtr = TextEditingController();
@@ -69,9 +79,26 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           SizedBox(height: getProportionateScreenHeight(25)),
           buildPrimaryPosFormField(),
           SizedBox(height: getProportionateScreenHeight(10)),
-          buildSecondaryPosInfoText(),
-          SizedBox(height: getProportionateScreenHeight(10)),
           buildFootballField(),
+          buildSecondaryPosInfoText(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildFeetCheckBoxes(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildHeightFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildNumberFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildValueFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildWageFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildReleaseClauseFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildCurrentAbilityFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildPotentialAbilityFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildImgPathFormField(),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -79,7 +106,42 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
-                print('Ready to go');
+                // print('Ready to go');
+                Player newPlayer = Player(
+                  teamId: widget.team?.id,
+                  name: nameCtr.text,
+                  nation: nationCtr.text,
+                  birthdate: birthdateCtr.text,
+                  primaryPosition: primaryPosCtr.text,
+                  secondaryPosition: jsonEncode(secondaryPos),
+                  leftFoot: leftFoot ? 1 : 0,
+                  rightFoot: rightFoot ? 1 : 0,
+                  height:
+                      heightCtr.text.isEmpty ? null : int.parse(heightCtr.text),
+                  number:
+                      numberCtr.text.isEmpty ? null : int.parse(numberCtr.text),
+                  value: valueCtr.text.isEmpty ? 0 : int.parse(valueCtr.text),
+                  wage: wageCtr.text.isEmpty ? 0 : int.parse(wageCtr.text),
+                  releaseClause: releaseClauseCtr.text.isEmpty
+                      ? null
+                      : int.parse(releaseClauseCtr.text),
+                  ability: abilityCtr.text.isEmpty
+                      ? null
+                      : double.parse(abilityCtr.text),
+                  potential: potentialCtr.text.isEmpty
+                      ? null
+                      : double.parse(potentialCtr.text),
+                  imgPath: imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
+                );
+                DatabaseHelper.addPlayer(newPlayer);
+                Navigator.pushNamed(
+                  context,
+                  DetailedTeamScreen.routeName,
+                  arguments: {
+                    'user': widget.user,
+                    'team': widget.team,
+                  },
+                );
               }
             },
           ),
@@ -88,14 +150,239 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
+  TextFormField buildImgPathFormField() {
+    return TextFormField(
+      onTap: () async {
+        XFile? imgFile =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        setState(() {
+          imgPathCtr.text = imgFile!.path;
+        });
+      },
+      readOnly: true,
+      controller: imgPathCtr,
+      decoration: InputDecoration(
+        labelText: 'Image',
+        hintText: 'Choose your player image',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: const Icon(Icons.image_outlined),
+        prefixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              imgPathCtr.clear();
+            });
+          },
+          icon: const Icon(Icons.clear_outlined),
+        ),
+      ),
+    );
+  }
+
+  TextFormField buildPotentialAbilityFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: potentialCtr,
+      decoration: const InputDecoration(
+        labelText: 'Potential ability',
+        hintText: 'Enter player potential ability',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.star_half_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildCurrentAbilityFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: abilityCtr,
+      decoration: const InputDecoration(
+        labelText: 'Current ability',
+        hintText: 'Enter player current ability',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.star_outline_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildReleaseClauseFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: releaseClauseCtr,
+      decoration: const InputDecoration(
+        labelText: 'Release clause',
+        hintText: 'Enter player release clause',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.money_off_csred_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildWageFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: wageCtr,
+      decoration: const InputDecoration(
+        labelText: 'Wage',
+        hintText: 'Enter player wage',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.money_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildValueFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: valueCtr,
+      decoration: const InputDecoration(
+        labelText: 'Value',
+        hintText: 'Enter player value',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.attach_money_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildNumberFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      onChanged: (value) {
+        errors.clear();
+        if (value.isEmpty ||
+            (int.parse(value) <= 99 && int.parse(value) >= 1)) {
+          removeError(kPlayerNumberInvalidError);
+        }
+      },
+      validator: (value) {
+        if (value!.isNotEmpty &&
+            (int.parse(value) > 99 || int.parse(value) < 1)) {
+          addError(kPlayerNumberInvalidError);
+          return "";
+        }
+        return null;
+      },
+      controller: numberCtr,
+      decoration: const InputDecoration(
+        labelText: 'Number',
+        hintText: 'Enter player number',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.numbers_outlined),
+      ),
+    );
+  }
+
+  TextFormField buildHeightFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      onChanged: (value) {
+        errors.clear();
+        if (value.isEmpty ||
+            (int.parse(value) <= 300 && int.parse(value) >= 100)) {
+          removeError(kPlayerHeightInvalidError);
+        }
+      },
+      validator: (value) {
+        if (value!.isNotEmpty &&
+            (int.parse(value) > 300 || int.parse(value) < 100)) {
+          addError(kPlayerHeightInvalidError);
+          return "";
+        }
+        return null;
+      },
+      controller: heightCtr,
+      decoration: const InputDecoration(
+        labelText: 'Height',
+        hintText: 'Enter player height',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.height_outlined),
+      ),
+    );
+  }
+
+  Stack buildFeetCheckBoxes() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        TextFormField(
+          readOnly: true,
+          decoration: const InputDecoration(
+            labelText: 'Foot',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: leftFoot,
+                    activeColor: kPrimaryColor,
+                    onChanged: (value) {
+                      setState(() {
+                        leftFoot = value!;
+                      });
+                    },
+                  ),
+                  Text(
+                    'Left foot',
+                    style: TextStyle(
+                      color: leftFoot ? kPrimaryColor : kSecondaryColor,
+                    ),
+                  ),
+                  SizedBox(width: getProportionateScreenWidth(8)),
+                  Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(math.pi),
+                    child: SvgPicture.asset(
+                      'assets/icons/foot.svg',
+                      color: leftFoot ? kPrimaryColor : kSecondaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/foot.svg',
+                    color: rightFoot ? kPrimaryColor : kSecondaryColor,
+                  ),
+                  SizedBox(width: getProportionateScreenWidth(8)),
+                  Text(
+                    'Right foot',
+                    style: TextStyle(
+                      color: rightFoot ? kPrimaryColor : kSecondaryColor,
+                    ),
+                  ),
+                  Checkbox(
+                    value: rightFoot,
+                    activeColor: kPrimaryColor,
+                    onChanged: (value) {
+                      setState(() {
+                        rightFoot = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Text buildSecondaryPosInfoText() {
     return Text(
-          "Choose other position(s) by clicking on the dots inside the football field",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: getProportionateScreenWidth(14),
-          ),
-        );
+      "Choose other position(s) by clicking on the dots inside the football field",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: getProportionateScreenWidth(14),
+      ),
+    );
   }
 
   Container buildFootballField() {
@@ -113,9 +400,9 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           buildPositionDot(52, 110, 'CB'),
           buildPositionDot(52, 15, 'LB'),
           buildPositionDot(52, 206, 'RB'),
-          buildPositionDot(95, 15, 'LWB'),
-          buildPositionDot(95, 206, 'RWB'),
-          buildPositionDot(113, 110, 'DM'),
+          buildPositionDot(105, 15, 'LWB'),
+          buildPositionDot(105, 206, 'RWB'),
+          buildPositionDot(105, 110, 'DM'),
           buildPositionDot(159, 110, 'CM'),
           buildPositionDot(159, 15, 'LM'),
           buildPositionDot(159, 206, 'RM'),
@@ -134,7 +421,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       left: getProportionateScreenWidth(x),
       child: InkWell(
         onTap: () {
-          if (primaryPosCtr != pos) {
+          if (primaryPosCtr.text != pos) {
             if (!secondaryPos.contains(pos)) {
               setState(() {
                 secondaryPos.add(pos);
@@ -152,7 +439,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           width: getProportionateScreenWidth(17),
           height: getProportionateScreenWidth(17),
           decoration: BoxDecoration(
-            color: primaryPosCtr == pos
+            color: primaryPosCtr.text == pos
                 ? Colors.green
                 : secondaryPos.contains(pos)
                     ? Colors.lightGreen
@@ -171,53 +458,76 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  DropdownButtonHideUnderline buildPrimaryPosFormField() {
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-        alignedDropdown: true,
-        child: DropdownButtonFormField(
-          icon: const Icon(Icons.sports_soccer_outlined),
-          hint: const Text("Choose primary position"),
-          menuMaxHeight: getProportionateScreenHeight(400),
-          borderRadius: BorderRadius.circular(15),
-          items: [
-            buildPrimaryPosDropdownMenuItem("GK", true, "Goalkeeper"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Defense"),
-            buildPrimaryPosDropdownMenuItem("CB", true, "Defender (Center)"),
-            buildPrimaryPosDropdownMenuItem("LB", true, "Defender (Left)"),
-            buildPrimaryPosDropdownMenuItem("RB", true, "Defender (Right)"),
-            buildPrimaryPosDropdownMenuItem("LWB", true, "Wing Back (Left)"),
-            buildPrimaryPosDropdownMenuItem("RWB", true, "Wing Back (Right)"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Midfield"),
-            buildPrimaryPosDropdownMenuItem("DM", true, "Defensive Midfielder"),
-            buildPrimaryPosDropdownMenuItem("CM", true, "Midfielder (Center)"),
-            buildPrimaryPosDropdownMenuItem("LM", true, "Midfielder (Left)"),
-            buildPrimaryPosDropdownMenuItem("RM", true, "Midfielder (Right)"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Attack"),
-            buildPrimaryPosDropdownMenuItem(
-                "AMC", true, "Attacking Midfielder (Center)"),
-            buildPrimaryPosDropdownMenuItem(
-                "AML", true, "Attacking Midfielder (Left)"),
-            buildPrimaryPosDropdownMenuItem(
-                "AMR", true, "Attacking Midfielder (Right)"),
-            buildPrimaryPosDropdownMenuItem("ST", true, "Striker"),
-          ],
-          onChanged: (newValue) {
-            setState(() {
-              primaryPosCtr = newValue!;
-              removeError(kPositionNullError);
-            });
-            // print(primaryPosCtr.text);
-          },
-          validator: (value) {
-            if (value == null) {
-              addError(kPositionNullError);
-              return "";
-            }
-            return null;
-          },
+  Stack buildPrimaryPosFormField() {
+    return Stack(
+      alignment: Alignment.bottomLeft,
+      children: [
+        DropdownButtonHideUnderline(
+          child: ButtonTheme(
+            alignedDropdown: true,
+            child: DropdownButton(
+              iconSize: 0,
+              menuMaxHeight: getProportionateScreenHeight(400),
+              borderRadius: BorderRadius.circular(15),
+              items: [
+                buildPrimaryPosDropdownMenuItem("GK", true, "Goalkeeper"),
+                buildPrimaryPosDropdownMenuItem("0", false, "Defense"),
+                buildPrimaryPosDropdownMenuItem(
+                    "CB", true, "Defender (Center)"),
+                buildPrimaryPosDropdownMenuItem("LB", true, "Defender (Left)"),
+                buildPrimaryPosDropdownMenuItem("RB", true, "Defender (Right)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "LWB", true, "Wing Back (Left)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "RWB", true, "Wing Back (Right)"),
+                buildPrimaryPosDropdownMenuItem("0", false, "Midfield"),
+                buildPrimaryPosDropdownMenuItem(
+                    "DM", true, "Defensive Midfielder"),
+                buildPrimaryPosDropdownMenuItem(
+                    "CM", true, "Midfielder (Center)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "LM", true, "Midfielder (Left)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "RM", true, "Midfielder (Right)"),
+                buildPrimaryPosDropdownMenuItem("0", false, "Attack"),
+                buildPrimaryPosDropdownMenuItem(
+                    "AMC", true, "Attacking Midfielder (Center)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "AML", true, "Attacking Midfielder (Left)"),
+                buildPrimaryPosDropdownMenuItem(
+                    "AMR", true, "Attacking Midfielder (Right)"),
+                buildPrimaryPosDropdownMenuItem("ST", true, "Striker"),
+              ],
+              onChanged: (newValue) {
+                setState(() {
+                  primaryPosCtr.text = newValue!;
+                  removeError(kPositionNullError);
+                });
+                // print(primaryPosCtr.text);
+              },
+            ),
+          ),
         ),
-      ),
+        IgnorePointer(
+          child: TextFormField(
+            readOnly: true,
+            controller: primaryPosCtr,
+            decoration: const InputDecoration(
+              labelText: 'Primary position',
+              hintText: "Choose primary position",
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Icon(Icons.sports_soccer_outlined),
+            ),
+            validator: (value) {
+              if (value == null) {
+                addError(kPositionNullError);
+                return "";
+              }
+              return null;
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -279,7 +589,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       },
       decoration: const InputDecoration(
         labelText: 'Birth date',
-        hintText: 'Enter your player birth date',
+        hintText: 'Enter player birth date',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.calendar_today_outlined),
       ),
@@ -328,14 +638,14 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
             // },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(kCountryNullError);
+                addError(kPlayerNationNullError);
                 return "";
               }
               return null;
             },
             decoration: const InputDecoration(
               labelText: 'Nation',
-              hintText: 'Choose your player nation',
+              hintText: 'Choose player nation',
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: Icon(Icons.flag_outlined),
             ),
@@ -350,12 +660,12 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       onChanged: (value) {
         errors.clear();
         if (value.isNotEmpty) {
-          removeError(kNameNullError);
+          removeError(kPlayerNameNullError);
         }
       },
       validator: (value) {
         if (value!.isEmpty) {
-          addError(kNameNullError);
+          addError(kPlayerNameNullError);
           return "";
         }
         return null;
@@ -363,7 +673,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       controller: nameCtr,
       decoration: const InputDecoration(
         labelText: 'Name',
-        hintText: 'Enter your player name',
+        hintText: 'Enter player name',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.person_outline_sharp),
       ),
