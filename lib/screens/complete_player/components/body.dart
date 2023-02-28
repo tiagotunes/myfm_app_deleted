@@ -25,7 +25,8 @@ class Body extends StatelessWidget {
                 'Create Player',
                 style: headingStyle,
               ),
-              const Text('Complete your player details',
+              const Text(
+                'Complete your player details',
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.05),

@@ -19,6 +19,12 @@ samples, guidance on mobile development, and a full API reference.
 
 ---
 
+## To be done
+
+- Add isOnLOan (and loanTo) to player model
+
+---
+
 ## Models
 
 ### Users

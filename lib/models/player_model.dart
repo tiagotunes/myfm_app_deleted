@@ -22,7 +22,7 @@ class Player {
     this.secondaryPosition,
     required this.leftFoot,
     required this.rightFoot,
-    this. height,
+    this.height,
     this.number,
     this.value,
     this.wage,

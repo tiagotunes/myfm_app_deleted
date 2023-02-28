@@ -494,76 +494,58 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  Stack buildPrimaryPosFormField() {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        DropdownButtonHideUnderline(
-          child: ButtonTheme(
-            alignedDropdown: true,
-            child: DropdownButton(
-              iconSize: 0,
-              menuMaxHeight: getProportionateScreenHeight(400),
-              borderRadius: BorderRadius.circular(15),
-              items: [
-                buildPrimaryPosDropdownMenuItem("GK", true, "Goalkeeper"),
-                buildPrimaryPosDropdownMenuItem("0", false, "Defense"),
-                buildPrimaryPosDropdownMenuItem(
-                    "CB", true, "Defender (Center)"),
-                buildPrimaryPosDropdownMenuItem("LB", true, "Defender (Left)"),
-                buildPrimaryPosDropdownMenuItem("RB", true, "Defender (Right)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "LWB", true, "Wing Back (Left)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "RWB", true, "Wing Back (Right)"),
-                buildPrimaryPosDropdownMenuItem("0", false, "Midfield"),
-                buildPrimaryPosDropdownMenuItem(
-                    "DM", true, "Defensive Midfielder"),
-                buildPrimaryPosDropdownMenuItem(
-                    "CM", true, "Midfielder (Center)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "LM", true, "Midfielder (Left)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "RM", true, "Midfielder (Right)"),
-                buildPrimaryPosDropdownMenuItem("0", false, "Attack"),
-                buildPrimaryPosDropdownMenuItem(
-                    "AMC", true, "Attacking Midfielder (Center)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "AML", true, "Attacking Midfielder (Left)"),
-                buildPrimaryPosDropdownMenuItem(
-                    "AMR", true, "Attacking Midfielder (Right)"),
-                buildPrimaryPosDropdownMenuItem("ST", true, "Striker"),
-              ],
-              onChanged: (newValue) {
-                setState(() {
-                  primaryPosCtr.text = newValue!;
-                  removeError(kPositionNullError);
-                });
-                // print(primaryPosCtr.text);
-              },
-            ),
+  DropdownButtonHideUnderline buildPrimaryPosFormField() {
+    return DropdownButtonHideUnderline(
+      child: ButtonTheme(
+        alignedDropdown: true,
+        child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+            label: Text('Primary position'),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: 'Choose player primary position',
+            suffixIcon: Icon(Icons.sports_soccer_outlined),
           ),
+          iconSize: 0,
+          menuMaxHeight: getProportionateScreenHeight(400),
+          borderRadius: BorderRadius.circular(15),
+          items: [
+            buildPrimaryPosDropdownMenuItem("GK", true, "Goalkeeper"),
+            buildPrimaryPosDropdownMenuItem("0", false, "Defense"),
+            buildPrimaryPosDropdownMenuItem("CB", true, "Defender (Center)"),
+            buildPrimaryPosDropdownMenuItem("LB", true, "Defender (Left)"),
+            buildPrimaryPosDropdownMenuItem("RB", true, "Defender (Right)"),
+            buildPrimaryPosDropdownMenuItem("LWB", true, "Wing Back (Left)"),
+            buildPrimaryPosDropdownMenuItem("RWB", true, "Wing Back (Right)"),
+            buildPrimaryPosDropdownMenuItem("0", false, "Midfield"),
+            buildPrimaryPosDropdownMenuItem("DM", true, "Defensive Midfielder"),
+            buildPrimaryPosDropdownMenuItem("CM", true, "Midfielder (Center)"),
+            buildPrimaryPosDropdownMenuItem("LM", true, "Midfielder (Left)"),
+            buildPrimaryPosDropdownMenuItem("RM", true, "Midfielder (Right)"),
+            buildPrimaryPosDropdownMenuItem("0", false, "Attack"),
+            buildPrimaryPosDropdownMenuItem(
+                "AMC", true, "Attacking Midfielder (Center)"),
+            buildPrimaryPosDropdownMenuItem(
+                "AML", true, "Attacking Midfielder (Left)"),
+            buildPrimaryPosDropdownMenuItem(
+                "AMR", true, "Attacking Midfielder (Right)"),
+            buildPrimaryPosDropdownMenuItem("ST", true, "Striker"),
+          ],
+          onChanged: (newValue) {
+            setState(() {
+              primaryPosCtr.text = newValue!;
+              removeError(kPositionNullError);
+            });
+            // print(primaryPosCtr.text);
+          },
+          validator: (value) {
+            if (value == null) {
+              addError(kPositionNullError);
+              return "";
+            }
+            return null;
+          },
         ),
-        IgnorePointer(
-          child: TextFormField(
-            readOnly: true,
-            controller: primaryPosCtr,
-            decoration: const InputDecoration(
-              labelText: 'Primary position',
-              hintText: "Choose primary position",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.sports_soccer_outlined),
-            ),
-            validator: (value) {
-              if (value == null) {
-                addError(kPositionNullError);
-                return "";
-              }
-              return null;
-            },
-          ),
-        ),
-      ],
+      ),
     );
   }
 
