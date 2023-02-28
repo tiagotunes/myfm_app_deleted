@@ -134,6 +134,12 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   imgPath: imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
                 );
                 DatabaseHelper.addPlayer(newPlayer);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  TeamsScreen.routeName,
+                  ModalRoute.withName(HomeScreen.routeName),
+                  arguments: {'user': widget.user},
+                );
                 Navigator.pushNamed(
                   context,
                   DetailedTeamScreen.routeName,
@@ -188,6 +194,21 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.star_half_outlined),
       ),
+      onChanged: (value) {
+        errors.clear();
+        if (value.isEmpty ||
+            (double.parse(value) >= 0 && double.parse(value) <= 5)) {
+          removeError(kPlayerAbilityInvalidError);
+        }
+      },
+      validator: (value) {
+        if (value!.isNotEmpty &&
+            (double.parse(value) < 0 || double.parse(value) > 5)) {
+          addError(kPlayerAbilityInvalidError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 
@@ -201,6 +222,21 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.star_outline_outlined),
       ),
+      onChanged: (value) {
+        errors.clear();
+        if (value.isEmpty ||
+            (double.parse(value) >= 0 && double.parse(value) <= 5)) {
+          removeError(kPlayerAbilityInvalidError);
+        }
+      },
+      validator: (value) {
+        if (value!.isNotEmpty &&
+            (double.parse(value) < 0 || double.parse(value) > 5)) {
+          addError(kPlayerAbilityInvalidError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 
@@ -425,12 +461,12 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
             if (!secondaryPos.contains(pos)) {
               setState(() {
                 secondaryPos.add(pos);
-                print(secondaryPos);
+                // print(secondaryPos);
               });
             } else {
               setState(() {
                 secondaryPos.remove(pos);
-                print(secondaryPos);
+                // print(secondaryPos);
               });
             }
           }

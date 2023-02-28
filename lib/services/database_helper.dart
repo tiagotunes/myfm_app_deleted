@@ -39,7 +39,7 @@ class DatabaseHelper {
             height INTEGER, number INTEGER,
             value INTEGER DEFAULT 0 NOT NULL, wage INTEGER DEFAULT 0 NOT NULL, releaseClause INTEGER,
             ability REAL, potential REAL,
-            isNationalTeam INTEGER DEFAULT false NOT NULL, isLoaned INTEGER DEFAULT false NOT NULL,
+            isNationalTeam INTEGER DEFAULT 0 NOT NULL, isLoaned INTEGER DEFAULT 0 NOT NULL,
             loanFrom TEXT, imgPath TEXT
           );""",
         );
@@ -164,6 +164,49 @@ class DatabaseHelper {
     );
   }
 
+  static Future<int> getNumberPlayersFromTeam(Team team) async {
+    final db = await _getDB();
+    int? count = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['COUNT(*)'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    ));
+    return count!;
+  }
+
+  static Future<double> getAvgPlayersAgeFromTeam(Team team) async {
+    double avg=0;
+    int total = await DatabaseHelper.getNumberPlayersFromTeam(team);
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Players',
+      columns: ['birthdate'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    );
+    if (maps.isNotEmpty) {
+      double sum=0;
+      for (var i in maps) {
+        int year = DateTime.parse(i['birthdate']).year;
+        sum += year;
+      }
+      avg = sum / total;
+    }
+    return team.year - avg;
+  }
+
+  static Future<int> getNumberForeigPlayersFromTeam(Team team) async {
+    final db = await _getDB();
+    int? count = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['COUNT(*)'],
+      where: 'teamId = ? AND nation != ?',
+      whereArgs: [team.id, team.country],
+    ));
+    return count!;
+  }
+
   static Future<List<Player>?> getAllPlayersFromTeam(Team team) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
@@ -171,7 +214,6 @@ class DatabaseHelper {
       where: 'teamId = ?',
       whereArgs: [team.id],
     );
-    print(maps);
     if (maps.isEmpty) {
       return null;
     }

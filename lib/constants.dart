@@ -68,3 +68,4 @@ const String kPlayerBirthDateNullError = "Please enter player birthdate";
 const String kPlayerBirthDateInvalidError = "Player is to young to be on the team";
 const String kPlayerHeightInvalidError = "Player height need to be in cm";
 const String kPlayerNumberInvalidError = "Player number is invalid";
+const String kPlayerAbilityInvalidError = "Player ability is invalid";

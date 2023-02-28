@@ -1,14 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/team_model.dart';
+import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
-class TeamInformation extends StatelessWidget {
+class TeamInformation extends StatefulWidget {
   final Team team;
   const TeamInformation({
     super.key,
     required this.team,
   });
+
+  @override
+  State<TeamInformation> createState() => _TeamInformationState();
+}
+
+class _TeamInformationState extends State<TeamInformation> {
+  var f = NumberFormat("###.#");
+  int nPlayers = 0;
+  int nForeignPlayers = 0;
+  double perForeignPlayers = 0;
+  double avgAge = 0;
+
+  void _updateTeamInfo() async {
+    nPlayers = await DatabaseHelper.getNumberPlayersFromTeam(widget.team);
+    avgAge = await DatabaseHelper.getAvgPlayersAgeFromTeam(widget.team);
+    nForeignPlayers =
+        await DatabaseHelper.getNumberForeigPlayersFromTeam(widget.team);
+    perForeignPlayers = nForeignPlayers / nPlayers;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTeamInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +71,12 @@ class TeamInformation extends StatelessWidget {
               controller: ScrollController(keepScrollOffset: false),
               shrinkWrap: true,
               children: [
-                buildInformationItem(Icons.groups, 0, 'Total players'),
-                buildInformationItem(
-                    Icons.calendar_today, 0, 'Average age\nof players'),
-                buildInformationItem2(0.7, 0, 'Foreig players'),
-                buildInformationItem2(0.1, 0, 'National team\nplayers'),
+                buildInformationItem(Icons.groups, nPlayers, 'Total players'),
+                buildInformationItem1(
+                    Icons.calendar_today, avgAge, 'Average age\nof players'),
+                buildInformationItem2(
+                    perForeignPlayers, nForeignPlayers, 'Foreign players'),
+                buildInformationItem2(0.0, 0, 'National team\nplayers'),
               ],
             ),
           )
@@ -68,6 +97,33 @@ class TeamInformation extends StatelessWidget {
         SizedBox(height: getProportionateScreenHeight(2)),
         Text(
           number.toString(),
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontSize: getProportionateScreenWidth(18),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: kPrimaryColor.withOpacity(0.7),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column buildInformationItem1(IconData icon, double number, String text) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          size: getProportionateScreenWidth(25),
+          color: kPrimaryColor.withOpacity(0.7),
+        ),
+        Text(
+          avgAge == widget.team.year ? 0.toString() : f.format(number),
           style: TextStyle(
             color: kPrimaryColor,
             fontSize: getProportionateScreenWidth(18),

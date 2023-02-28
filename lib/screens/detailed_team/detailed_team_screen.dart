@@ -29,6 +29,11 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
     User? user = arguments['user'];
     Team? team = arguments['team'];
 
+    // int? index = arguments['index'];
+    // if (index != null) {
+    //   _currentIndex = index;
+    // }
+
     List<Widget> bodyOptions = <Widget>[
       const NotesBody(),
       const StaffBody(),

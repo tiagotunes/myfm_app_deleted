@@ -26,7 +26,15 @@ class _PlayersBodyState extends State<PlayersBody> {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return Text('1');
+              return Row(
+                children: [
+                  Text(snapshot.data![index].name),
+                  const SizedBox(width: 5),
+                  Text(snapshot.data![index].nation.split(' ')[0]),
+                  const SizedBox(width: 5),
+                  Text("${widget.team.year-DateTime.parse(snapshot.data![index].birthdate).year} years"),
+                ],
+              );
             },
           );
         } else {
