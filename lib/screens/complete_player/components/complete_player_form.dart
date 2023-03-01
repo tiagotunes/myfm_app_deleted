@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfm_app/components/custom_drawer/country_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -614,62 +615,50 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  Stack buildNationFormField() {
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            0.0,
+  DropdownButtonHideUnderline buildNationFormField() {
+    return DropdownButtonHideUnderline(
+      child: ButtonTheme(
+        alignedDropdown: true,
+        child: DropdownButtonFormField<Country>(
+          onChanged: (Country? newValue) {
+            setState(() {
+              nationCtr.text = newValue!.name;
+              removeError(kPositionNullError);
+            });
+          },
+          validator: (Country? newValue) {
+            if (newValue == null) {
+              addError(kPlayerNationNullError);
+              return "";
+            }
+            return null;
+          },
+          menuMaxHeight: getProportionateScreenHeight(400),
+          borderRadius: BorderRadius.circular(15),
+          iconSize: 0,
+          decoration: const InputDecoration(
+            labelText: 'Nation',
+            hintText: 'Choose player nation',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            suffixIcon: Icon(Icons.flag_outlined),
           ),
-          child: CSCPicker(
-            showStates: false,
-            showCities: false,
-            onCountryChanged: (c) {
-              nationCtr.text = c;
-              removeError(kCountryNullError);
-            },
-            onStateChanged: (state) {},
-            onCityChanged: (city) {},
-            countrySearchPlaceholder: "Search",
-            countryDropdownLabel: "Country",
-            dropdownDecoration: const BoxDecoration(color: Colors.black),
-            dropdownHeadingStyle: TextStyle(
-                fontSize: getProportionateScreenHeight(20),
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-            searchBarRadius: 20,
-          ),
+          items: countries.map<DropdownMenuItem<Country>>((Country country) {
+            return DropdownMenuItem<Country>(
+              value: country,
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    country.flag,
+                    height: getProportionateScreenHeight(23),
+                  ),
+                  SizedBox(width: getProportionateScreenWidth(10)),
+                  Text(country.name),
+                ],
+              ),
+            );
+          }).toList(),
         ),
-        IgnorePointer(
-          ignoring: true,
-          child: TextFormField(
-            readOnly: true,
-            controller: nationCtr,
-            // onChanged: (value) {
-            //   errors.clear();
-            //   if (value.isNotEmpty) {
-            //     removeError(kCountryNullError);
-            //   }
-            // },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(kPlayerNationNullError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: 'Nation',
-              hintText: 'Choose player nation',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.flag_outlined),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
