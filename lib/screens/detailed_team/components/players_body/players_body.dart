@@ -18,7 +18,7 @@ class _PlayersBodyState extends State<PlayersBody> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Player>?>(
-      future: DatabaseHelper.getAllPlayersFromTeam(widget.team),
+      future: DatabaseHelper.getAllPlayers(widget.team),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

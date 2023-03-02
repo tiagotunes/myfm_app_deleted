@@ -24,10 +24,10 @@ class _TeamInformationState extends State<TeamInformation> {
   double avgAge = 0;
 
   void _updateTeamInfo() async {
-    nPlayers = await DatabaseHelper.getNumberPlayersFromTeam(widget.team);
-    avgAge = await DatabaseHelper.getAvgPlayersAgeFromTeam(widget.team);
+    nPlayers = await DatabaseHelper.getNumberPlayers(widget.team);
+    avgAge = await DatabaseHelper.getAvgPlayersAge(widget.team);
     nForeignPlayers =
-        await DatabaseHelper.getNumberForeigPlayersFromTeam(widget.team);
+        await DatabaseHelper.getNumberForeigPlayers(widget.team);
     perForeignPlayers = nPlayers==0 ? 0 : nForeignPlayers / nPlayers;
     setState(() {});
   }

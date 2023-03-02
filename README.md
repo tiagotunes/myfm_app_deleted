@@ -34,20 +34,20 @@ When you open the app for the first time, the first thing you need to do is to c
     CREATE TABLE Users(
         id INTEGER PRIMARY KEY, 
         name TEXT NOT NULL, 
-        country TEXT NOT NULL, 
+        country TEXT NOT NULL, countryFlag TEXT NOT NULL, 
         birthdate TEXT NOT NULL,
         imgPath TEXT DEFAULT null,
     );
 
 
 ### Teams
-To create a team, you need to fill some attributtes. The first 3 are required and the rest are optional.  
+To create a team, you need to fill some attributtes. The first 3 (name, country and year) are required and the rest are optional.  
 
 
     CREATE TABLE Teams(
         id INTEGER PRIMARY KEY, 
         name TEXT NOT NULL, 
-        country TEXT NOT NULL, 
+        country TEXT NOT NULL, countryFlag TEXT NOT NULL, 
         year TEXT NOT NULL,
         league TEXT,
         stadium TEXT,
@@ -56,6 +56,31 @@ To create a team, you need to fill some attributtes. The first 3 are required an
         color TEXT DEFAULT 0xFFFFFFFF NOT NULL,
         imgBadgePath TEXT,
         imgStadiumPath TEXT,
+    );
+
+
+### Player
+To create a player, you need to fill some attributtes. The first 4 (name, nation, birthdate and primaryPosition) are required and the rest are optional.  
+
+
+    CREATE TABLE Players(
+        id INTEGER PRIMARY KEY,
+        teamId INTEGER NOT NULL, 
+        name TEXT NOT NULL, 
+        nation TEXT NOT NULL, nationFlag TEXT NOT NULL, 
+        birthdate TEXT NOT NULL,
+        primaryPosition TEXT NOT NULL,
+        secondaryPosition TEXT,
+        leftFoot INTEGER NOT NULL, rightFoot INTEGER NOT NULL,
+        value INTEGER DEFAULT 0 NOT NULL,
+        wage INTEGER DEFAULLT 0 NOT NULL,
+        releaseClause INTEGER,
+        ability REAL, 
+        potential REAL,
+        isNationalTeam INTEGER DEFAULT 0 NOT NULL,
+        isLoaned INTEGER DEFAULT 0 NOT NULL,
+        loanFrom TEXT, 
+        imgPath TEXT,
     );
 
 ---

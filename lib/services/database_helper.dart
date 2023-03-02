@@ -119,6 +119,10 @@ class DatabaseHelper {
       'Teams',
       where: 'id = ?',
       whereArgs: [team.id],
+    ) + await db.delete(
+      'Players',
+      where: 'teamId = ?',
+      whereArgs: [team.id],
     );
   }
 
@@ -129,6 +133,62 @@ class DatabaseHelper {
       return null;
     }
     return List.generate(maps.length, (index) => Team.fromJson(maps[index]));
+  }
+
+  static Future<int> getNumberPlayers(Team team) async {
+    final db = await _getDB();
+    int? count = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['COUNT(*)'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    ));
+    return count!;
+  }
+
+  static Future<double> getAvgPlayersAge(Team team) async {
+    double avg=0;
+    int total = await DatabaseHelper.getNumberPlayers(team);
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Players',
+      columns: ['birthdate'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    );
+    if (maps.isNotEmpty) {
+      double sum=0;
+      for (var i in maps) {
+        int year = DateTime.parse(i['birthdate']).year;
+        sum += year;
+      }
+      avg = sum / total;
+    }
+    return team.year - avg;
+  }
+
+  static Future<int> getNumberForeigPlayers(Team team) async {
+    final db = await _getDB();
+    int? count = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['COUNT(*)'],
+      where: 'teamId = ? AND nation != ?',
+      whereArgs: [team.id, team.country],
+    ));
+    return count!;
+  }
+
+  static Future<List<Player>?> getAllPlayers(Team team) async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Players',
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    );
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(maps.length, (index) => Player.fromJson(maps[index]));
   }
 
   /////////////
@@ -164,61 +224,7 @@ class DatabaseHelper {
     );
   }
 
-  static Future<int> getNumberPlayersFromTeam(Team team) async {
-    final db = await _getDB();
-    int? count = Sqflite.firstIntValue(await db.query(
-      'Players',
-      columns: ['COUNT(*)'],
-      where: 'teamId = ?',
-      whereArgs: [team.id],
-    ));
-    return count!;
-  }
 
-  static Future<double> getAvgPlayersAgeFromTeam(Team team) async {
-    double avg=0;
-    int total = await DatabaseHelper.getNumberPlayersFromTeam(team);
-    final db = await _getDB();
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Players',
-      columns: ['birthdate'],
-      where: 'teamId = ?',
-      whereArgs: [team.id],
-    );
-    if (maps.isNotEmpty) {
-      double sum=0;
-      for (var i in maps) {
-        int year = DateTime.parse(i['birthdate']).year;
-        sum += year;
-      }
-      avg = sum / total;
-    }
-    return team.year - avg;
-  }
-
-  static Future<int> getNumberForeigPlayersFromTeam(Team team) async {
-    final db = await _getDB();
-    int? count = Sqflite.firstIntValue(await db.query(
-      'Players',
-      columns: ['COUNT(*)'],
-      where: 'teamId = ? AND nation != ?',
-      whereArgs: [team.id, team.country],
-    ));
-    return count!;
-  }
-
-  static Future<List<Player>?> getAllPlayersFromTeam(Team team) async {
-    final db = await _getDB();
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Players',
-      where: 'teamId = ?',
-      whereArgs: [team.id],
-    );
-    if (maps.isEmpty) {
-      return null;
-    }
-    return List.generate(maps.length, (index) => Player.fromJson(maps[index]));
-  }
 
   static Future<int> deleteAll() async {
     final db = await _getDB();

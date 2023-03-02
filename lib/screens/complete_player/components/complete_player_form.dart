@@ -644,7 +644,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                 width: getProportionateScreenHeight(35),
               ),
         suffixIconConstraints:
-            BoxConstraints(minWidth: getProportionateScreenWidth(45)),
+            BoxConstraints(minWidth: getProportionateScreenWidth(50)),
       ),
       validator: (value) {
         if (value!.isEmpty) {
