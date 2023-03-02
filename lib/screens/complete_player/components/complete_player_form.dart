@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:math' as math;
-import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:myfm_app/components/custom_drawer/country_picker.dart';
+import 'package:myfm_app/components/country_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -31,6 +30,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final _formKey = GlobalKey<FormState>();
   final nameCtr = TextEditingController();
   final nationCtr = TextEditingController();
+  String nationFlagCtr = "";
   final birthdateCtr = TextEditingController();
   final primaryPosCtr = TextEditingController();
   List<dynamic> secondaryPos = [];
@@ -107,11 +107,11 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
-                // print('Ready to go');
                 Player newPlayer = Player(
                   teamId: widget.team?.id,
                   name: nameCtr.text,
                   nation: nationCtr.text,
+                  nationFlag: nationFlagCtr,
                   birthdate: birthdateCtr.text,
                   primaryPosition: primaryPosCtr.text,
                   secondaryPosition: jsonEncode(secondaryPos),
@@ -170,7 +170,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       controller: imgPathCtr,
       decoration: InputDecoration(
         labelText: 'Image',
-        hintText: 'Choose your player image',
+        hintText: 'Choose player image',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: const Icon(Icons.image_outlined),
         prefixIcon: IconButton(
@@ -615,50 +615,44 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  DropdownButtonHideUnderline buildNationFormField() {
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-        alignedDropdown: true,
-        child: DropdownButtonFormField<Country>(
-          onChanged: (Country? newValue) {
-            setState(() {
-              nationCtr.text = newValue!.name;
-              removeError(kPositionNullError);
-            });
+  TextFormField buildNationFormField() {
+    return TextFormField(
+      onTap: () async {
+        Country? result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MyCountryPicker(countries: countries);
           },
-          validator: (Country? newValue) {
-            if (newValue == null) {
-              addError(kPlayerNationNullError);
-              return "";
-            }
-            return null;
-          },
-          menuMaxHeight: getProportionateScreenHeight(400),
-          borderRadius: BorderRadius.circular(15),
-          iconSize: 0,
-          decoration: const InputDecoration(
-            labelText: 'Nation',
-            hintText: 'Choose player nation',
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: Icon(Icons.flag_outlined),
-          ),
-          items: countries.map<DropdownMenuItem<Country>>((Country country) {
-            return DropdownMenuItem<Country>(
-              value: country,
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    country.flag,
-                    height: getProportionateScreenHeight(23),
-                  ),
-                  SizedBox(width: getProportionateScreenWidth(10)),
-                  Text(country.name),
-                ],
+        );
+        if (result != null) {
+          nationCtr.text = result.name;
+          nationFlagCtr = result.flag;
+          removeError(kPlayerNationNullError);
+          setState(() {});
+        }
+      },
+      readOnly: true,
+      controller: nationCtr,
+      decoration: InputDecoration(
+        labelText: 'Nation',
+        hintText: 'Choose player nation',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: nationCtr.text.isEmpty
+            ? const Icon(Icons.flag_outlined)
+            : SvgPicture.asset(
+                nationFlagCtr,
+                width: getProportionateScreenHeight(35),
               ),
-            );
-          }).toList(),
-        ),
+        suffixIconConstraints:
+            BoxConstraints(minWidth: getProportionateScreenWidth(45)),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          addError(kPlayerNationNullError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 

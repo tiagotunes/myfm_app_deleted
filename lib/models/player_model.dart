@@ -1,7 +1,7 @@
 class Player {
   final int? id;
   final int? teamId;
-  final String name, nation, birthdate;
+  final String name, nation, nationFlag, birthdate;
   final String primaryPosition;
   final String? secondaryPosition;
   final int? leftFoot, rightFoot;
@@ -17,6 +17,7 @@ class Player {
     required this.teamId,
     required this.name,
     required this.nation,
+    required this.nationFlag,
     required this.birthdate,
     required this.primaryPosition,
     this.secondaryPosition,
@@ -40,6 +41,7 @@ class Player {
         teamId: json['teamId'],
         name: json['name'],
         nation: json['nation'],
+        nationFlag: json['nationFlag'],
         birthdate: json['birthdate'],
         primaryPosition: json['primaryPosition'],
         secondaryPosition: json['secondaryPosition'],
@@ -63,6 +65,7 @@ class Player {
         'teamId': teamId,
         'name': name,
         'nation': nation,
+        'nationFlag': nationFlag,
         'birthdate': birthdate,
         'primaryPosition': primaryPosition,
         'secondaryPosition': secondaryPosition,

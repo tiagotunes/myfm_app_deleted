@@ -26,12 +26,22 @@ class TeamBadge extends StatelessWidget {
                 ),
         ),
         SizedBox(height: getProportionateScreenHeight(8)),
-        Text(
-          team.country,
-          style: TextStyle(
-            fontSize: getProportionateScreenWidth(16),
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              team.countryFlag,
+              width: getProportionateScreenWidth(23),
+            ),
+            SizedBox(width: getProportionateScreenWidth(10)),
+            Text(
+              team.country,
+              style: TextStyle(
+                fontSize: getProportionateScreenWidth(16),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ],
     );

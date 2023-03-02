@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
@@ -30,9 +31,13 @@ class _PlayersBodyState extends State<PlayersBody> {
                 children: [
                   Text(snapshot.data![index].name),
                   const SizedBox(width: 5),
-                  Text(snapshot.data![index].nation.split(' ')[0]),
+                  SvgPicture.asset(
+                    snapshot.data![index].nationFlag,
+                    width: getProportionateScreenWidth(20),
+                  ),
                   const SizedBox(width: 5),
-                  Text("${widget.team.year-DateTime.parse(snapshot.data![index].birthdate).year} years"),
+                  Text(
+                      "${widget.team.year - DateTime.parse(snapshot.data![index].birthdate).year} years"),
                 ],
               );
             },

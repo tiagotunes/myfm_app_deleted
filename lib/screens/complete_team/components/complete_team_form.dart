@@ -1,7 +1,8 @@
-import 'package:csc_picker/csc_picker.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfm_app/components/country_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -26,6 +27,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
   final _formKey = GlobalKey<FormState>();
   final nameCtr = TextEditingController();
   final countryCtr = TextEditingController();
+  String countryFlagCtr = "";
   final yearCtr = TextEditingController();
   final leagueCtr = TextEditingController();
   final stadiumCtr = TextEditingController();
@@ -43,6 +45,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
     if (widget.team != null) {
       nameCtr.text = widget.team!.name;
       countryCtr.text = widget.team!.country;
+      countryFlagCtr = widget.team!.countryFlag;
       yearCtr.text = widget.team!.year.toString();
       if (widget.team!.league != null) {
         leagueCtr.text = widget.team!.league!;
@@ -114,6 +117,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                 Team newTeam = Team(
                   name: nameCtr.text,
                   country: countryCtr.text,
+                  countryFlag: countryFlagCtr,
                   year: int.parse(yearCtr.text),
                   league: leagueCtr.text.isEmpty ? null : leagueCtr.text,
                   stadium: stadiumCtr.text.isEmpty ? null : stadiumCtr.text,
@@ -126,9 +130,10 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   imgBadgePath: imgBadgePathCtr.text.isEmpty
                       ? null
                       : imgBadgePathCtr.text,
-                  imgStadiumPath: imgStadiumPathCtr.text.isEmpty || !stadiumEnable
-                      ? null
-                      : imgStadiumPathCtr.text,
+                  imgStadiumPath:
+                      imgStadiumPathCtr.text.isEmpty || !stadiumEnable
+                          ? null
+                          : imgStadiumPathCtr.text,
                   id: widget.team != null ? widget.team!.id : null,
                 );
                 if (widget.team != null) {
@@ -166,7 +171,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
       ),
     );
   }
-  
+
   Future<dynamic> showSaveSuccessModal(BuildContext context) {
     return showModalBottomSheet(
       context: context,
@@ -203,31 +208,31 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
 
   TextFormField buildStadiumImgFormField() {
     return TextFormField(
-          onTap: () async {
-            XFile? imgFile =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+      onTap: () async {
+        XFile? imgFile =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        setState(() {
+          imgStadiumPathCtr.text = imgFile!.path;
+        });
+      },
+      readOnly: true,
+      controller: imgStadiumPathCtr,
+      enabled: stadiumEnable,
+      decoration: InputDecoration(
+        labelText: 'Stadium',
+        hintText: 'Choose your team stadium',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: const Icon(Icons.image_outlined),
+        prefixIcon: IconButton(
+          onPressed: () {
             setState(() {
-              imgStadiumPathCtr.text = imgFile!.path;
+              imgStadiumPathCtr.clear();
             });
           },
-          readOnly: true,
-          controller: imgStadiumPathCtr,
-          enabled: stadiumEnable,
-          decoration: InputDecoration(
-            labelText: 'Stadium',
-            hintText: 'Choose your team stadium',
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: const Icon(Icons.image_outlined),
-            prefixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  imgStadiumPathCtr.clear();
-                });
-              },
-              icon: const Icon(Icons.clear_outlined),
-            ),
-          ),
-        );
+          icon: const Icon(Icons.clear_outlined),
+        ),
+      ),
+    );
   }
 
   TextFormField buildColorFormField(BuildContext context) {
@@ -415,62 +420,44 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
     );
   }
 
-  Stack buildCountryFormField() {
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            0.0,
-          ),
-          child: CSCPicker(
-            showStates: false,
-            showCities: false,
-            onCountryChanged: (c) {
-              countryCtr.text = c;
-              removeError(kCountryNullError);
-            },
-            onStateChanged: (state) {},
-            onCityChanged: (city) {},
-            countrySearchPlaceholder: "Search",
-            countryDropdownLabel: "Country",
-            dropdownDecoration: const BoxDecoration(color: Colors.black),
-            dropdownHeadingStyle: TextStyle(
-                fontSize: getProportionateScreenHeight(20),
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-            searchBarRadius: 20,
-          ),
-        ),
-        IgnorePointer(
-          ignoring: true,
-          child: TextFormField(
-            readOnly: true,
-            controller: countryCtr,
-            // onChanged: (value) {
-            //   errors.clear();
-            //   if (value.isNotEmpty) {
-            //     removeError(kCountryNullError);
-            //   }
-            // },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(kCountryNullError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: 'Country',
-              hintText: 'Choose your team country',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.flag_outlined),
-            ),
-          ),
-        ),
-      ],
+  TextFormField buildCountryFormField() {
+    return TextFormField(
+      onTap: () async {
+        Country? result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MyCountryPicker(countries: countries);
+          },
+        );
+        if (result != null) {
+          countryCtr.text = result.name;
+          countryFlagCtr = result.flag;
+          removeError(kPlayerNationNullError);
+          setState(() {});
+        }
+      },
+      readOnly: true,
+      controller: countryCtr,
+      decoration: InputDecoration(
+        labelText: 'Nation',
+        hintText: 'Choose player nation',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: countryCtr.text.isEmpty
+            ? const Icon(Icons.flag_outlined)
+            : SvgPicture.asset(
+                countryFlagCtr,
+                width: getProportionateScreenHeight(35),
+              ),
+        suffixIconConstraints:
+            BoxConstraints(minWidth: getProportionateScreenWidth(45)),
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          addError(kPlayerNationNullError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 

@@ -1,6 +1,6 @@
 class Team {
   final int? id;
-  final String name, country;
+  final String name, country, countryFlag;
   final int year;
   final String? league, stadium;
   final int? transferBudget, wageBudget;
@@ -10,6 +10,7 @@ class Team {
     this.id,
     required this.name,
     required this.country,
+    required this.countryFlag,
     required this.year,
     this.league,
     this.stadium,
@@ -24,6 +25,7 @@ class Team {
         id: json['id'],
         name: json['name'],
         country: json['country'],
+        countryFlag: json['countryFlag'],
         year: json['year'],
         league: json['league'],
         stadium: json['stadium'],
@@ -38,6 +40,7 @@ class Team {
         'id': id,
         'name': name,
         'country': country,
+        'countryFlag': countryFlag,
         'year': year,
         'league': league,
         'stadium': stadium,

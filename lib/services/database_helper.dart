@@ -16,14 +16,14 @@ class DatabaseHelper {
         await db.execute(
           """CREATE TABLE Users(
             id INTEGER PRIMARY KEY, 
-            name TEXT NOT NULL, country TEXT NOT NULL, birthdate TEXT NOT NULL, 
+            name TEXT NOT NULL, country TEXT NOT NULL, countryFlag TEXT NOT NULL, birthdate TEXT NOT NULL, 
             imgPath TEXT
           );""",
         );
         await db.execute(
           """CREATE TABLE Teams(
             id INTEGER PRIMARY KEY, 
-            name TEXT NOT NULL, country TEXT NOT NULL, year INTEGER NOT NULL, 
+            name TEXT NOT NULL, country TEXT NOT NULL, countryFlag TEXT NOT NULL, year INTEGER NOT NULL, 
             league TEXT, stadium TEXT, 
             transferBudget INTEGER DEFAULT 0 NOT NULL, wageBudget INTEGER DEFAULT 0 NOT NULL, 
             color TEXT DEFAULT 0xFFFFFFFF NOT NULL, 
@@ -33,7 +33,7 @@ class DatabaseHelper {
         await db.execute(
           """CREATE TABLE Players(
             id INTEGER PRIMARY KEY, teamId INTEGER NOT NULL,
-            name TEXT NOT NULL, nation TEXT NOT NULL, birthdate TEXT NOT NULL,
+            name TEXT NOT NULL, nation TEXT NOT NULL, nationFlag TEXT NOT NULL, birthdate TEXT NOT NULL,
             primaryPosition TEXT NOT NULL, secondaryPosition TEXT,
             leftFoot INTEGER NOT NULL, rightFoot INTEGER NOT NULL,
             height INTEGER, number INTEGER,

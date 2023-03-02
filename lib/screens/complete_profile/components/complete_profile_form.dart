@@ -1,6 +1,7 @@
-import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:myfm_app/components/country_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -23,6 +24,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final _formKey = GlobalKey<FormState>();
   final nameCtr = TextEditingController();
   final countryCtr = TextEditingController();
+  String countryFlagCtr = "";
   final birthdateCtr = TextEditingController();
   final List<String> errors = [];
   // UnfocusDisposition disposition = UnfocusDisposition.scope;
@@ -33,6 +35,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     if (widget.user != null) {
       nameCtr.text = widget.user!.name;
       countryCtr.text = widget.user!.country;
+      countryFlagCtr = widget.user!.countryFlag;
       birthdateCtr.text = widget.user!.birthdate;
     }
   }
@@ -74,6 +77,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 User newUser = User(
                   name: nameCtr.text,
                   country: countryCtr.text,
+                  countryFlag: countryFlagCtr,
                   birthdate: birthdateCtr.text,
                   id: widget.user != null ? widget.user!.id : 0,
                 );
@@ -112,44 +116,43 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildBirthdateFormField(BuildContext context) {
     return TextFormField(
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: birthdateCtr.text == ''
-                  ? DateTime.utc(2000)
-                  : DateTime.parse(birthdateCtr.text),
-              firstDate: DateTime.utc(1900),
-              lastDate: DateTime.utc(2100),
-              initialDatePickerMode: DatePickerMode.day,
-            );
-            if (pickedDate != null) {
-              String formattedDate =
-                  DateFormat('yyyy-MM-dd').format(pickedDate);
-              birthdateCtr.text = formattedDate;
-            }
-          },
-          readOnly: true,
-          controller: birthdateCtr,
-          onChanged: (value) {
-            errors.clear();
-            if (value.isNotEmpty) {
-              removeError(kBirthDateNullError);
-            }
-          },
-          validator: (value) {
-            if (value!.isEmpty) {
-              addError(kBirthDateNullError);
-              return "";
-            }
-            return null;
-          },
-          decoration: const InputDecoration(
-            labelText: 'Birth date',
-            hintText: 'Enter your birth date',
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            suffixIcon: Icon(Icons.calendar_today_outlined),
-          ),
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: birthdateCtr.text == ''
+              ? DateTime.utc(2000)
+              : DateTime.parse(birthdateCtr.text),
+          firstDate: DateTime.utc(1900),
+          lastDate: DateTime.utc(2100),
+          initialDatePickerMode: DatePickerMode.day,
         );
+        if (pickedDate != null) {
+          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          birthdateCtr.text = formattedDate;
+        }
+      },
+      readOnly: true,
+      controller: birthdateCtr,
+      onChanged: (value) {
+        errors.clear();
+        if (value.isNotEmpty) {
+          removeError(kBirthDateNullError);
+        }
+      },
+      validator: (value) {
+        if (value!.isEmpty) {
+          addError(kBirthDateNullError);
+          return "";
+        }
+        return null;
+      },
+      decoration: const InputDecoration(
+        labelText: 'Birth date',
+        hintText: 'Enter your birth date',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: Icon(Icons.calendar_today_outlined),
+      ),
+    );
   }
 
   Future<dynamic> showSaveSuccessModal(BuildContext context) {
@@ -187,62 +190,44 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  Stack buildCountryFormField() {
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            getProportionateScreenWidth(10),
-            0.0,
-          ),
-          child: CSCPicker(
-            showStates: false,
-            showCities: false,
-            onCountryChanged: (c) {
-              countryCtr.text = c;
-              removeError(kCountryNullError);
-            },
-            onStateChanged: (state) {},
-            onCityChanged: (city) {},
-            countrySearchPlaceholder: "Search",
-            countryDropdownLabel: "Country",
-            dropdownDecoration: const BoxDecoration(color: Colors.black),
-            dropdownHeadingStyle: TextStyle(
-                fontSize: getProportionateScreenHeight(20),
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-            searchBarRadius: 20,
-          ),
-        ),
-        IgnorePointer(
-          ignoring: true,
-          child: TextFormField(
-            readOnly: true,
-            controller: countryCtr,
-            // onChanged: (value) {
-            //   errors.clear();
-            //   if (value.isNotEmpty) {
-            //     removeError(kCountryNullError);
-            //   }
-            // },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(kCountryNullError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: 'Country',
-              hintText: 'Choose your country',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: Icon(Icons.flag_outlined),
-            ),
-          ),
-        ),
-      ],
+  TextFormField buildCountryFormField() {
+    return TextFormField(
+      onTap: () async {
+        Country? result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MyCountryPicker(countries: countries);
+          },
+        );
+        if (result != null) {
+          countryCtr.text = result.name;
+          countryFlagCtr = result.flag;
+          removeError(kPlayerNationNullError);
+          setState(() {});
+        }
+      },
+      readOnly: true,
+      controller: countryCtr,
+      decoration: InputDecoration(
+        labelText: 'Nation',
+        hintText: 'Choose player nation',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: countryCtr.text.isEmpty
+            ? const Icon(Icons.flag_outlined)
+            : SvgPicture.asset(
+                countryFlagCtr,
+                width: getProportionateScreenHeight(35),
+              ),
+        suffixIconConstraints:
+            BoxConstraints(minWidth: getProportionateScreenWidth(45)),
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          addError(kPlayerNationNullError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 
