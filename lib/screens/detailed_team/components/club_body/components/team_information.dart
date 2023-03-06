@@ -17,7 +17,7 @@ class TeamInformation extends StatefulWidget {
 }
 
 class _TeamInformationState extends State<TeamInformation> {
-  var f = NumberFormat("###.#");
+  var f = NumberFormat("##.#");
   int nPlayers = 0;
   int nForeignPlayers = 0;
   double perForeignPlayers = 0;

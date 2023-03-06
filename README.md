@@ -22,6 +22,7 @@ samples, guidance on mobile development, and a full API reference.
 ## To be done
 
 - Add isOnLOan (and loanTo) to player model
+- Instead of number of players in national team put value of squad (or maybe put that in finances container, I want to replace the nation team players)
 
 ---
 

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:myfm_app/components/country_picker.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
+import 'package:myfm_app/components/position_picker.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
@@ -33,6 +34,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   String nationFlagCtr = "";
   final birthdateCtr = TextEditingController();
   final primaryPosCtr = TextEditingController();
+  String primaryPos = "";
   List<dynamic> secondaryPos = [];
   bool leftFoot = false;
   bool rightFoot = false;
@@ -113,7 +115,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   nation: nationCtr.text,
                   nationFlag: nationFlagCtr,
                   birthdate: birthdateCtr.text,
-                  primaryPosition: primaryPosCtr.text,
+                  primaryPosition: primaryPos,
                   secondaryPosition: jsonEncode(secondaryPos),
                   leftFoot: leftFoot ? 1 : 0,
                   rightFoot: rightFoot ? 1 : 0,
@@ -458,7 +460,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       left: getProportionateScreenWidth(x),
       child: InkWell(
         onTap: () {
-          if (primaryPosCtr.text != pos) {
+          if (primaryPos != pos) {
             if (!secondaryPos.contains(pos)) {
               setState(() {
                 secondaryPos.add(pos);
@@ -476,7 +478,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           width: getProportionateScreenWidth(17),
           height: getProportionateScreenWidth(17),
           decoration: BoxDecoration(
-            color: primaryPosCtr.text == pos
+            color: primaryPos == pos
                 ? Colors.green
                 : secondaryPos.contains(pos)
                     ? Colors.lightGreen
@@ -495,58 +497,49 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  DropdownButtonHideUnderline buildPrimaryPosFormField() {
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-        alignedDropdown: true,
-        child: DropdownButtonFormField(
-          decoration: const InputDecoration(
-            label: Text('Primary position'),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: 'Choose player primary position',
-            suffixIcon: Icon(Icons.sports_soccer_outlined),
-          ),
-          iconSize: 0,
-          menuMaxHeight: getProportionateScreenHeight(400),
-          borderRadius: BorderRadius.circular(15),
-          items: [
-            buildPrimaryPosDropdownMenuItem("GK", true, "Goalkeeper"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Defense"),
-            buildPrimaryPosDropdownMenuItem("CB", true, "Defender (Center)"),
-            buildPrimaryPosDropdownMenuItem("LB", true, "Defender (Left)"),
-            buildPrimaryPosDropdownMenuItem("RB", true, "Defender (Right)"),
-            buildPrimaryPosDropdownMenuItem("LWB", true, "Wing Back (Left)"),
-            buildPrimaryPosDropdownMenuItem("RWB", true, "Wing Back (Right)"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Midfield"),
-            buildPrimaryPosDropdownMenuItem("DM", true, "Defensive Midfielder"),
-            buildPrimaryPosDropdownMenuItem("CM", true, "Midfielder (Center)"),
-            buildPrimaryPosDropdownMenuItem("LM", true, "Midfielder (Left)"),
-            buildPrimaryPosDropdownMenuItem("RM", true, "Midfielder (Right)"),
-            buildPrimaryPosDropdownMenuItem("0", false, "Attack"),
-            buildPrimaryPosDropdownMenuItem(
-                "AMC", true, "Attacking Midfielder (Center)"),
-            buildPrimaryPosDropdownMenuItem(
-                "AML", true, "Attacking Midfielder (Left)"),
-            buildPrimaryPosDropdownMenuItem(
-                "AMR", true, "Attacking Midfielder (Right)"),
-            buildPrimaryPosDropdownMenuItem("ST", true, "Striker"),
-          ],
-          onChanged: (newValue) {
-            setState(() {
-              primaryPosCtr.text = newValue!;
-              removeError(kPositionNullError);
-            });
-            // print(primaryPosCtr.text);
+  TextFormField buildPrimaryPosFormField() {
+    return TextFormField(
+      onTap: () async {
+        Position? result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const MyPositionPicker();
           },
-          validator: (value) {
-            if (value == null) {
-              addError(kPositionNullError);
-              return "";
-            }
-            return null;
-          },
-        ),
+        );
+        if (result != null) {
+          primaryPosCtr.text = result.position;
+          primaryPos = result.pos;
+          removeError(kPositionNullError);
+          setState(() {});
+          // print(primaryPos);
+        }
+      },
+      readOnly: true,
+      controller: primaryPosCtr,
+      decoration: InputDecoration(
+        labelText: 'Primary position',
+        hintText: 'Choose player primary position',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: primaryPosCtr.text.isEmpty
+            ? const Icon(Icons.sports_soccer_outlined)
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    primaryPos,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          addError(kPositionNullError);
+          return "";
+        }
+        return null;
+      },
     );
   }
 
