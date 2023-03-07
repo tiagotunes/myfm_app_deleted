@@ -149,6 +149,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   arguments: {
                     'user': widget.user,
                     'team': widget.team,
+                    'index': 3,
                   },
                 );
               }

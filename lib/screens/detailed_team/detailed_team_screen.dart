@@ -21,6 +21,7 @@ class DetailedTeamScreen extends StatefulWidget {
 
 class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
   int _currentIndex = 2;
+  bool firstX = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +30,11 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
     User? user = arguments['user'];
     Team? team = arguments['team'];
 
-    // int? index = arguments['index'];
-    // if (index != null) {
-    //   _currentIndex = index;
-    // }
+    int? index = arguments['index'];
+    if (index != null && !firstX) {
+      _currentIndex = index;
+      firstX = true;
+    }
 
     List<Widget> bodyOptions = <Widget>[
       const NotesBody(),
