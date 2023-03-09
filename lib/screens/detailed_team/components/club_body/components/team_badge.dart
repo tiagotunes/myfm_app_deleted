@@ -31,7 +31,7 @@ class TeamBadge extends StatelessWidget {
           children: [
             SvgPicture.asset(
               team.countryFlag,
-              width: getProportionateScreenWidth(23),
+              width: getProportionateScreenWidth(25),
             ),
             SizedBox(width: getProportionateScreenWidth(10)),
             Text(
