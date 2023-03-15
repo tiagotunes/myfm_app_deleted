@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
+import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_card.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
@@ -24,23 +24,22 @@ class _PlayersBodyState extends State<PlayersBody> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Text(snapshot.data![index].name),
-                  const SizedBox(width: 5),
-                  SvgPicture.asset(
-                    snapshot.data![index].nationFlag,
-                    width: getProportionateScreenWidth(20),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                      "${widget.team.year - DateTime.parse(snapshot.data![index].birthdate).year} years"),
-                ],
-              );
-            },
+          return ListView(
+            children: [
+              snapshot.data!.any((element) => element.primaryPosition=='GK') ? buildPositionLabel('Goalkeeper') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'GK'),
+              snapshot.data!.any((element) => element.primaryPosition=='CB') ? buildPositionLabel('CB') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'CB'),
+              snapshot.data!.any((element) => element.primaryPosition=='LB') ? buildPositionLabel('LB') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'LB'),
+              snapshot.data!.any((element) => element.primaryPosition=='RB') ? buildPositionLabel('RB') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'RB'),
+              snapshot.data!.any((element) => element.primaryPosition=='LWB') ? buildPositionLabel('LWB') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'LWB'),
+              snapshot.data!.any((element) => element.primaryPosition=='RWB') ? buildPositionLabel('RWB') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'RWB'),
+              // ... DM, etc
+            ],
           );
         } else {
           return Center(
@@ -55,6 +54,43 @@ class _PlayersBodyState extends State<PlayersBody> {
           );
         }
       },
+    );
+  }
+
+  ListView buildPositionPlayers(List<Player> players, String position) {
+    List<Player>? playersPos = players
+        .where((element) => element.primaryPosition == position)
+        .toList();
+    // sort playersPos
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: playersPos.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            getProportionateScreenWidth(8),
+            0,
+            getProportionateScreenWidth(8),
+            getProportionateScreenWidth(6),
+          ),
+          child: PlayerCard(
+            player: playersPos[index],
+            teamYear: widget.team.year,
+          ),
+        );
+      },
+    );
+  }
+
+  ListTile buildPositionLabel(String position) {
+    return ListTile(
+      title: Text(
+        position,
+        style: TextStyle(
+          fontSize: getProportionateScreenWidth(20),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }
