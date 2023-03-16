@@ -65,6 +65,26 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       birthdateCtr.text = widget.player!.birthdate.toString();
       primaryPos = widget.player!.primaryPosition.toString();
       initPositionDropdown(primaryPos);
+      secondaryPos = jsonDecode(widget.player!.secondaryPosition!);
+      leftFoot = widget.player!.leftFoot == 1 ? true : false;
+      rightFoot = widget.player!.rightFoot == 1 ? true : false;
+      if (widget.player!.height != null) {
+        heightCtr.text = widget.player!.height.toString();
+      }
+      if (widget.player!.number != null) {
+        numberCtr.text = widget.player!.number.toString();
+      }
+      valueCtr.text = widget.player!.value.toString();
+      wageCtr.text = widget.player!.wage.toString();
+      if (widget.player!.releaseClause != null) {
+        releaseClauseCtr.text = widget.player!.releaseClause.toString();
+      }
+      if (widget.player!.ability != null) {
+        abilityCtr.text = widget.player!.ability.toString();
+      }
+      if (widget.player!.potential != null) {
+        potentialCtr.text = widget.player!.potential.toString();
+      }
     }
   }
 
@@ -170,7 +190,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
-            text: 'Continue',
+            text: widget.player != null ? 'Save' : 'Continue',
             press: () {
               if (_formKey.currentState!.validate()) {
                 Player newPlayer = Player(
