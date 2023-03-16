@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_player/components/body.dart';
@@ -13,9 +14,10 @@ class CompletePlayerScreen extends StatelessWidget {
         <String, dynamic>{}) as Map;
     User? user = arguments['user'];
     Team? team = arguments['team'];
+    Player? player = arguments['player'];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Player'),
+        title: Text(player!=null ? 'Edit Player' : 'Create Player'),
         centerTitle: true,
         leading: IconButton(
           icon:
@@ -23,7 +25,7 @@ class CompletePlayerScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Body(user: user, team: team),
+      body: Body(user: user, team: team, player: player),
     );
   }
 }

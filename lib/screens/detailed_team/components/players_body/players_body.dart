@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
+import 'package:myfm_app/models/user_model.dart';
+import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_card.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
 
 class PlayersBody extends StatefulWidget {
+  final User user;
   final Team team;
-  const PlayersBody({super.key, required this.team});
+  const PlayersBody({super.key, required this.team, required this.user});
 
   @override
   State<PlayersBody> createState() => _PlayersBodyState();
@@ -26,7 +29,7 @@ class _PlayersBodyState extends State<PlayersBody> {
         if (snapshot.hasData) {
           return ListView(
             children: [
-              snapshot.data!.any((element) => element.primaryPosition=='GK') ? buildPositionLabel('Goalkeeper') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition=='GK') ? buildPositionLabel('GK') : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'GK'),
               snapshot.data!.any((element) => element.primaryPosition=='CB') ? buildPositionLabel('CB') : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'CB'),
@@ -38,7 +41,22 @@ class _PlayersBodyState extends State<PlayersBody> {
               buildPositionPlayers(snapshot.data!, 'LWB'),
               snapshot.data!.any((element) => element.primaryPosition=='RWB') ? buildPositionLabel('RWB') : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RWB'),
-              // ... DM, etc
+              snapshot.data!.any((element) => element.primaryPosition=='DM') ? buildPositionLabel('DM') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'DM'),
+              snapshot.data!.any((element) => element.primaryPosition=='CM') ? buildPositionLabel('CM') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'CM'),
+              snapshot.data!.any((element) => element.primaryPosition=='LM') ? buildPositionLabel('LM') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'LM'),
+              snapshot.data!.any((element) => element.primaryPosition=='RM') ? buildPositionLabel('RM') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'RM'),
+              snapshot.data!.any((element) => element.primaryPosition=='AMC') ? buildPositionLabel('AMC') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'AMC'),
+              snapshot.data!.any((element) => element.primaryPosition=='AML') ? buildPositionLabel('AML') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'AML'),
+              snapshot.data!.any((element) => element.primaryPosition=='AMR') ? buildPositionLabel('AMR') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'AMR'),
+              snapshot.data!.any((element) => element.primaryPosition=='ST') ? buildPositionLabel('ST') : const SizedBox(),
+              buildPositionPlayers(snapshot.data!, 'ST'),
             ],
           );
         } else {
@@ -64,6 +82,7 @@ class _PlayersBodyState extends State<PlayersBody> {
     // sort playersPos
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: playersPos.length,
       itemBuilder: (context, index) {
         return Padding(
@@ -73,9 +92,22 @@ class _PlayersBodyState extends State<PlayersBody> {
             getProportionateScreenWidth(8),
             getProportionateScreenWidth(6),
           ),
-          child: PlayerCard(
-            player: playersPos[index],
-            teamYear: widget.team.year,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                CompletePlayerScreen.routeName,
+                arguments: {
+                  'user': widget.user,
+                  'team': widget.team,
+                  'player': playersPos[index]
+                },
+              );
+            },
+            child: PlayerCard(
+              player: playersPos[index],
+              teamYear: widget.team.year,
+            ),
           ),
         );
       },

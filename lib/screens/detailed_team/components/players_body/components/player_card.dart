@@ -27,56 +27,74 @@ class PlayerCard extends StatelessWidget {
           ),
           SizedBox(width: getProportionateScreenWidth(13)),
           Expanded(
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      player.number != null
-                          ? player.number.toString()
-                          : '',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: getProportionateScreenWidth(20),
-                        fontWeight: FontWeight.w200,
-                        letterSpacing: getProportionateScreenWidth(-1),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          // Text(
+                          //   player.number != null ? player.number.toString() : '',
+                          //   style: TextStyle(
+                          //     color: Colors.black,
+                          //     fontSize: getProportionateScreenWidth(20),
+                          //     fontWeight: FontWeight.w200,
+                          //     letterSpacing: getProportionateScreenWidth(-1),
+                          //   ),
+                          // ),
+                          // SizedBox(
+                          //   width: player.number != null
+                          //       ? getProportionateScreenWidth(10)
+                          //       : 0,
+                          // ),
+                          Expanded(
+                            child: Text(
+                              player.name,
+                              style: TextStyle(
+                                height: 1.0,
+                                color: Colors.black,
+                                fontSize: getProportionateScreenWidth(20),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing:
+                                    getProportionateScreenWidth(-1.5),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: player.number != null
-                          ? getProportionateScreenWidth(10)
-                          : 0,
-                    ),
-                    Expanded(
-                      child: Text(
-                        player.name,
-                        style: TextStyle(
-                          height: 1.0,
-                          color: Colors.black,
-                          fontSize: getProportionateScreenWidth(20),
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: getProportionateScreenWidth(-1.5),
-                        ),
-                      ),
-                    ),
-                  ],
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            player.nationFlag,
+                            width: getProportionateScreenWidth(22),
+                          ),
+                          SizedBox(width: getProportionateScreenWidth(10)),
+                          Text(
+                            "${teamYear - DateTime.parse(player.birthdate).year} years",
+                            style: TextStyle(
+                              fontSize: getProportionateScreenWidth(15),
+                              letterSpacing: -1,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      player.nationFlag,
-                      width: getProportionateScreenWidth(22),
-                    ),
-                    SizedBox(width: getProportionateScreenWidth(10)),
-                    Text(
-                      "${teamYear - DateTime.parse(player.birthdate).year} years",
-                      style: TextStyle(
-                        fontSize: getProportionateScreenWidth(15),
-                        letterSpacing: -1,
-                      ),
-                    ),
-                  ],
-                )
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(6)),
+                //   child: Text(
+                //     player.number != null ? player.number.toString() : '',
+                //     style: TextStyle(
+                //       color: Colors.black,
+                //       fontSize: getProportionateScreenWidth(25),
+                //       fontWeight: FontWeight.bold,
+                //       letterSpacing: getProportionateScreenWidth(-2),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

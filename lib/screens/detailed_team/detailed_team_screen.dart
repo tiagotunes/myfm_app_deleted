@@ -40,7 +40,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
       const NotesBody(),
       const StaffBody(),
       ClubBody(team: team!),
-      PlayersBody(team: team),
+      PlayersBody(user: user!, team: team),
       const TransfersBody(),
     ];
 
@@ -60,7 +60,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
               const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [CustomTeamPopupMenu(user: user!, team: team)],
+        actions: [CustomTeamPopupMenu(user: user, team: team)],
       ),
       body: bodyOptions.elementAt(_currentIndex),
       bottomNavigationBar: buildBottomNavigationBar(team.color!),

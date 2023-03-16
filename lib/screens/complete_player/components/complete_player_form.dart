@@ -21,7 +21,8 @@ import 'package:myfm_app/size_config.dart';
 class CompletePlayerForm extends StatefulWidget {
   final User? user;
   final Team? team;
-  const CompletePlayerForm({super.key, this.user, this.team});
+  final Player? player;
+  const CompletePlayerForm({super.key, this.user, this.team, this.player});
 
   @override
   State<CompletePlayerForm> createState() => _CompletePlayerFormState();
@@ -46,11 +47,74 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final abilityCtr = TextEditingController();
   final potentialCtr = TextEditingController();
 
+  // To be done
   final isNationalTCtr = TextEditingController();
   final isLoanedCtr = TextEditingController();
   final loanFromCtr = TextEditingController();
   final imgPathCtr = TextEditingController();
+
   final List<String> errors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.player != null) {
+      nameCtr.text = widget.player!.name;
+      nationCtr.text = widget.player!.nation;
+      nationFlagCtr = widget.player!.nationFlag;
+      birthdateCtr.text = widget.player!.birthdate.toString();
+      primaryPos = widget.player!.primaryPosition.toString();
+      initPositionDropdown(primaryPos);
+    }
+  }
+
+  void initPositionDropdown(String pos) {
+    switch (pos) {
+      case 'GK':
+        primaryPosCtr.text = "Goalkeeper";
+        break;
+      case 'CB':
+        primaryPosCtr.text = "Defense (Center)";
+        break;
+      case 'LB':
+        primaryPosCtr.text = "Defense (Left)";
+        break;
+      case 'RB':
+        primaryPosCtr.text = "Defense (Right)";
+        break;
+      case 'LWB':
+        primaryPosCtr.text = "Wing Back (Left)";
+        break;
+      case 'RWB':
+        primaryPosCtr.text = "Wing Back (Right)";
+        break;
+      case 'DM':
+        primaryPosCtr.text = "Defensive Midfielder";
+        break;
+      case 'CM':
+        primaryPosCtr.text = "Midfielder (Center)";
+        break;
+      case 'LM':
+        primaryPosCtr.text = "Midfielder (Left)";
+        break;
+      case 'RM':
+        primaryPosCtr.text = "Midfielder (Right)";
+        break;
+      case 'AMC':
+        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        break;
+      case 'AML':
+        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        break;
+      case 'AMR':
+        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        break;
+      case 'ST':
+        primaryPosCtr.text = "Striker";
+        break;
+      default:
+    }
+  }
 
   void addError(String error) {
     if (!errors.contains(error)) {
