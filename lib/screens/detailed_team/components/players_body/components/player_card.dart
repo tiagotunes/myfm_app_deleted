@@ -35,20 +35,6 @@ class PlayerCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          // Text(
-                          //   player.number != null ? player.number.toString() : '',
-                          //   style: TextStyle(
-                          //     color: Colors.black,
-                          //     fontSize: getProportionateScreenWidth(20),
-                          //     fontWeight: FontWeight.w200,
-                          //     letterSpacing: getProportionateScreenWidth(-1),
-                          //   ),
-                          // ),
-                          // SizedBox(
-                          //   width: player.number != null
-                          //       ? getProportionateScreenWidth(10)
-                          //       : 0,
-                          // ),
                           Expanded(
                             child: Text(
                               player.name,
@@ -84,14 +70,26 @@ class PlayerCard extends StatelessWidget {
                   ),
                 ),
                 // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(6)),
-                //   child: Text(
-                //     player.number != null ? player.number.toString() : '',
-                //     style: TextStyle(
-                //       color: Colors.black,
-                //       fontSize: getProportionateScreenWidth(25),
-                //       fontWeight: FontWeight.bold,
-                //       letterSpacing: getProportionateScreenWidth(-2),
+                //   padding: EdgeInsets.symmetric(
+                //     horizontal: getProportionateScreenWidth(6),
+                //   ),
+                //   child: Container(
+                //     width: getProportionateScreenWidth(45),
+                //     padding: EdgeInsets.all(getProportionateScreenWidth(6)),
+                //     alignment: Alignment.center,
+                //     decoration: BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       color: Colors.yellow,
+                //       border: Border.all(color: Colors.black.withOpacity(0.5), width: 2),
+                //     ),
+                //     child: Text(
+                //       player.number != null ? player.number.toString() : '',
+                //       style: TextStyle(
+                //         color: Colors.black,
+                //         fontSize: getProportionateScreenWidth(22),
+                //         fontWeight: FontWeight.w900,
+                //         letterSpacing: getProportionateScreenWidth(-2),
+                //       ),
                 //     ),
                 //   ),
                 // ),

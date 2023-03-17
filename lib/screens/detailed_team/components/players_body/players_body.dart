@@ -29,33 +29,61 @@ class _PlayersBodyState extends State<PlayersBody> {
         if (snapshot.hasData) {
           return ListView(
             children: [
-              snapshot.data!.any((element) => element.primaryPosition=='GK') ? buildPositionLabel('GK') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'GK')
+                  ? buildPositionLabel('GK')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'GK'),
-              snapshot.data!.any((element) => element.primaryPosition=='CB') ? buildPositionLabel('CB') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'CB')
+                  ? buildPositionLabel('CB')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'CB'),
-              snapshot.data!.any((element) => element.primaryPosition=='LB') ? buildPositionLabel('LB') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'LB')
+                  ? buildPositionLabel('LB')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LB'),
-              snapshot.data!.any((element) => element.primaryPosition=='RB') ? buildPositionLabel('RB') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'RB')
+                  ? buildPositionLabel('RB')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RB'),
-              snapshot.data!.any((element) => element.primaryPosition=='LWB') ? buildPositionLabel('LWB') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'LWB')
+                  ? buildPositionLabel('LWB')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LWB'),
-              snapshot.data!.any((element) => element.primaryPosition=='RWB') ? buildPositionLabel('RWB') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'RWB')
+                  ? buildPositionLabel('RWB')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RWB'),
-              snapshot.data!.any((element) => element.primaryPosition=='DM') ? buildPositionLabel('DM') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'DM')
+                  ? buildPositionLabel('DM')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'DM'),
-              snapshot.data!.any((element) => element.primaryPosition=='CM') ? buildPositionLabel('CM') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'CM')
+                  ? buildPositionLabel('CM')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'CM'),
-              snapshot.data!.any((element) => element.primaryPosition=='LM') ? buildPositionLabel('LM') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'LM')
+                  ? buildPositionLabel('LM')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LM'),
-              snapshot.data!.any((element) => element.primaryPosition=='RM') ? buildPositionLabel('RM') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'RM')
+                  ? buildPositionLabel('RM')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RM'),
-              snapshot.data!.any((element) => element.primaryPosition=='AMC') ? buildPositionLabel('AMC') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'AMC')
+                  ? buildPositionLabel('AMC')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AMC'),
-              snapshot.data!.any((element) => element.primaryPosition=='AML') ? buildPositionLabel('AML') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'AML')
+                  ? buildPositionLabel('AML')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AML'),
-              snapshot.data!.any((element) => element.primaryPosition=='AMR') ? buildPositionLabel('AMR') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'AMR')
+                  ? buildPositionLabel('AMR')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AMR'),
-              snapshot.data!.any((element) => element.primaryPosition=='ST') ? buildPositionLabel('ST') : const SizedBox(),
+              snapshot.data!.any((element) => element.primaryPosition == 'ST')
+                  ? buildPositionLabel('ST')
+                  : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'ST'),
             ],
           );
@@ -79,7 +107,9 @@ class _PlayersBodyState extends State<PlayersBody> {
     List<Player>? playersPos = players
         .where((element) => element.primaryPosition == position)
         .toList();
-    // sort playersPos
+    if (playersPos.length > 1) {
+      playersPos.sort(mySort);
+    }
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -124,5 +154,22 @@ class _PlayersBodyState extends State<PlayersBody> {
         ),
       ),
     );
+  }
+
+  int mySort(Player a, Player b) {
+    DateTime aBirthdate = DateTime.parse(a.birthdate);
+    DateTime bBirthdate = DateTime.parse(b.birthdate);
+
+    return (b.ability ?? double.negativeInfinity)
+                .compareTo(a.ability ?? double.negativeInfinity) !=
+            0
+        ? (b.ability ?? double.negativeInfinity)
+            .compareTo(a.ability ?? double.negativeInfinity)
+        : (b.value ?? double.negativeInfinity)
+                    .compareTo(a.value ?? double.negativeInfinity) !=
+                0
+            ? (b.value ?? double.negativeInfinity)
+                .compareTo(a.value ?? double.negativeInfinity)
+            : bBirthdate.compareTo(aBirthdate);
   }
 }

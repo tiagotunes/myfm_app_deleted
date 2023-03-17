@@ -219,28 +219,70 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                       ? null
                       : double.parse(potentialCtr.text),
                   imgPath: imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
+                  id: widget.player != null ? widget.player!.id : null,
                 );
-                DatabaseHelper.addPlayer(newPlayer);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  TeamsScreen.routeName,
-                  ModalRoute.withName(HomeScreen.routeName),
-                  arguments: {'user': widget.user},
-                );
-                Navigator.pushNamed(
-                  context,
-                  DetailedTeamScreen.routeName,
-                  arguments: {
-                    'user': widget.user,
-                    'team': widget.team,
-                    'index': 3,
-                  },
-                );
+                if (widget.player != null) {
+                  DatabaseHelper.updatePlayer(newPlayer);
+                  showSaveSuccessModal(context);
+                } else {
+                  DatabaseHelper.addPlayer(newPlayer);
+                }
+                Future.delayed(const Duration(seconds: 2), () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    TeamsScreen.routeName,
+                    ModalRoute.withName(HomeScreen.routeName),
+                    arguments: {'user': widget.user},
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    DetailedTeamScreen.routeName,
+                    arguments: {
+                      'user': widget.user,
+                      'team': widget.team,
+                      'index': 3,
+                    },
+                  );
+                });
               }
             },
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> showSaveSuccessModal(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: getProportionateScreenHeight(110),
+          child: Column(
+            children: [
+              const Spacer(flex: 2),
+              Icon(
+                Icons.save,
+                size: getProportionateScreenWidth(25),
+              ),
+              const Spacer(),
+              Text(
+                'Your player was updated successfully',
+                style: TextStyle(
+                    color: kPrimaryColor,
+                    fontSize: getProportionateScreenWidth(16),
+                    fontWeight: FontWeight.bold),
+              ),
+              const Spacer(flex: 2),
+            ],
+          ),
+        );
+      },
     );
   }
 
