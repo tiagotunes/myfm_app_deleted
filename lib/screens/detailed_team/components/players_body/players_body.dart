@@ -136,7 +136,7 @@ class _PlayersBodyState extends State<PlayersBody> {
             },
             child: PlayerCard(
               player: playersPos[index],
-              teamYear: widget.team.year,
+              team: widget.team,
             ),
           ),
         );
