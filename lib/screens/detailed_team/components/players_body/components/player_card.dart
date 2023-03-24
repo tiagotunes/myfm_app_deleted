@@ -69,7 +69,7 @@ class PlayerCard extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: grayscale > 140 ? Colors.black : Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                           fontSize: getProportionateScreenWidth(11),
                         ),
                       ),

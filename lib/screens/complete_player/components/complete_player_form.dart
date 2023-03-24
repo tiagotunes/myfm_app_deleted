@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfm_app/components/country_picker.dart';
@@ -44,8 +45,8 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final valueCtr = TextEditingController();
   final wageCtr = TextEditingController();
   final releaseClauseCtr = TextEditingController();
-  final abilityCtr = TextEditingController();
-  final potentialCtr = TextEditingController();
+  double abilitySlider = 0;
+  double potentialSlider = 0;
 
   // To be done
   final isNationalTCtr = TextEditingController();
@@ -80,10 +81,10 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         releaseClauseCtr.text = widget.player!.releaseClause.toString();
       }
       if (widget.player!.ability != null) {
-        abilityCtr.text = widget.player!.ability.toString();
+        abilitySlider = widget.player!.ability!;
       }
       if (widget.player!.potential != null) {
-        potentialCtr.text = widget.player!.potential.toString();
+        potentialSlider = widget.player!.potential!;
       }
     }
   }
@@ -212,12 +213,8 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   releaseClause: releaseClauseCtr.text.isEmpty
                       ? null
                       : int.parse(releaseClauseCtr.text),
-                  ability: abilityCtr.text.isEmpty
-                      ? null
-                      : double.parse(abilityCtr.text),
-                  potential: potentialCtr.text.isEmpty
-                      ? null
-                      : double.parse(potentialCtr.text),
+                  ability: abilitySlider,
+                  potential: potentialSlider,
                   imgPath: imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
                   id: widget.player != null ? widget.player!.id : null,
                 );
@@ -314,59 +311,88 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
-  TextFormField buildPotentialAbilityFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: potentialCtr,
-      decoration: const InputDecoration(
-        labelText: 'Potential ability',
-        hintText: 'Enter player potential ability',
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: Icon(Icons.star_half_outlined),
-      ),
-      onChanged: (value) {
-        errors.clear();
-        if (value.isEmpty ||
-            (double.parse(value) >= 0 && double.parse(value) <= 5)) {
-          removeError(kPlayerAbilityInvalidError);
-        }
-      },
-      validator: (value) {
-        if (value!.isNotEmpty &&
-            (double.parse(value) < 0 || double.parse(value) > 5)) {
-          addError(kPlayerAbilityInvalidError);
-          return "";
-        }
-        return null;
-      },
+  List<Widget> buildStars(double value) {
+    int intValue = value.floor();
+    int remainder = ((value - intValue) * 2).toInt();
+    List<Widget> widgetList = List.generate(
+      intValue,
+      (index) => const Icon(Icons.star, color: Colors.amber,),
+    );
+    if (remainder == 1) {
+      widgetList.add(const Icon(Icons.star_half, color: Colors.amber,));
+    }
+    widgetList.addAll(List.generate(
+      5 - intValue - remainder,
+      (index) => const Icon(Icons.star_border_outlined),
+    ));
+    return widgetList;
+  }
+
+  Stack buildPotentialAbilityFormField() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: getProportionateScreenWidth(140),
+          child: Slider(
+            value: potentialSlider,
+            min: 0,
+            max: 5,
+            divisions: 10,
+            onChanged: (value) {
+              setState(() {
+                potentialSlider = value;
+              });
+            },
+          ),
+        ),
+        IgnorePointer(
+          child: TextFormField(
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: 'Potential ability',
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: buildStars(potentialSlider)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  TextFormField buildCurrentAbilityFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: abilityCtr,
-      decoration: const InputDecoration(
-        labelText: 'Current ability',
-        hintText: 'Enter player current ability',
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: Icon(Icons.star_outline_outlined),
-      ),
-      onChanged: (value) {
-        errors.clear();
-        if (value.isEmpty ||
-            (double.parse(value) >= 0 && double.parse(value) <= 5)) {
-          removeError(kPlayerAbilityInvalidError);
-        }
-      },
-      validator: (value) {
-        if (value!.isNotEmpty &&
-            (double.parse(value) < 0 || double.parse(value) > 5)) {
-          addError(kPlayerAbilityInvalidError);
-          return "";
-        }
-        return null;
-      },
+  Stack buildCurrentAbilityFormField() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: getProportionateScreenWidth(140),
+          child: Slider(
+            value: abilitySlider,
+            min: 0,
+            max: 5,
+            divisions: 10,
+            onChanged: (value) {
+              setState(() {
+                abilitySlider = value;
+              });
+            },
+          ),
+        ),
+        IgnorePointer(
+          child: TextFormField(
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: 'Current ability',
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: buildStars(abilitySlider)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -581,24 +607,42 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     );
   }
 
+  Future<bool?> showInfoToast(String msg, int length) {
+    return Fluttertoast.showToast(
+      msg: msg,
+      toastLength: length == 1 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: length,
+      backgroundColor: kSecondaryColor,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   Positioned buildPositionDot(double x, double y, String pos) {
     return Positioned(
       top: getProportionateScreenHeight(y),
       left: getProportionateScreenWidth(x),
       child: InkWell(
         onTap: () {
-          if (primaryPos != pos) {
+          if (primaryPos == '') {
+            showInfoToast("Please choose primary position", 2);
+          } else if (primaryPos != pos) {
             if (!secondaryPos.contains(pos)) {
               setState(() {
                 secondaryPos.add(pos);
                 // print(secondaryPos);
               });
+              showInfoToast(pos, 1);
             } else {
               setState(() {
                 secondaryPos.remove(pos);
                 // print(secondaryPos);
               });
+              showInfoToast('$pos removed', 1);
             }
+          } else {
+            showInfoToast("$pos is the primary position", 2);
           }
         },
         child: Container(
