@@ -178,6 +178,30 @@ class DatabaseHelper {
     return count!;
   }
 
+  static Future<List<Player>?> getForeigPlayers(Team team) async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Players',
+      where: 'teamId = ? AND nation != ?',
+      whereArgs: [team.id, team.country],
+    );
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(maps.length, (index) => Player.fromJson(maps[index]));
+  }
+
+  static Future<int> getSquadValue(Team team) async {
+    final db = await _getDB();
+    int? value = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['SUM(value)'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    ));
+    return value!;
+  }
+
   static Future<List<Player>?> getAllPlayers(Team team) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
