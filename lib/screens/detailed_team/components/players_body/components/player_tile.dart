@@ -5,10 +5,10 @@ import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/size_config.dart';
 
-class PlayerCard extends StatelessWidget {
+class PlayerTile extends StatelessWidget {
   final Player player;
   final Team team;
-  const PlayerCard({super.key, required this.player, required this.team});
+  const PlayerTile({super.key, required this.player, required this.team});
 
   @override
   Widget build(BuildContext context) {

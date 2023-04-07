@@ -82,7 +82,7 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(8),
-            vertical: getProportionateScreenHeight(10),
+            vertical: getProportionateScreenHeight(11),
           ),
           child: GNav(
             gap: 8,
@@ -90,10 +90,10 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
             iconSize: getProportionateScreenWidth(24),
             padding: EdgeInsets.symmetric(
               horizontal: getProportionateScreenWidth(10),
-              vertical: getProportionateScreenHeight(15),
+              vertical: getProportionateScreenHeight(11),
             ),
             tabBackgroundColor: Color(int.parse(color)).withOpacity(0.3),
-            tabBorderRadius: 25,
+            tabBorderRadius: 20,
             tabActiveBorder: Border.all(
               color: Color(int.parse(color)) == Colors.white
                   ? kSecondaryColor.withOpacity(0.3)
