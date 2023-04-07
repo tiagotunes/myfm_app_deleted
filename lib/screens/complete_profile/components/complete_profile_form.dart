@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:myfm_app/components/country_picker.dart';
+import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -83,7 +84,15 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 );
                 if (widget.user != null) {
                   DatabaseHelper.updateUser(newUser);
-                  showSaveSuccessModal(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const CustomAlertDialog(
+                        icon: Icons.save,
+                        text: 'Profile updated successfully',
+                      );
+                    },
+                  );
                   Future.delayed(const Duration(seconds: 2), () {
                     Navigator.pop(context);
                     Navigator.pushNamed(
@@ -152,41 +161,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: Icon(Icons.calendar_today_outlined),
       ),
-    );
-  }
-
-  Future<dynamic> showSaveSuccessModal(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: getProportionateScreenHeight(110),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
-              Icon(
-                Icons.save,
-                size: getProportionateScreenWidth(25),
-              ),
-              const Spacer(),
-              Text(
-                'Your profile was updated successfully',
-                style: TextStyle(
-                  color: kPrimaryColor,
-                  fontSize: getProportionateScreenWidth(16),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(flex: 2),
-            ],
-          ),
-        );
-      },
     );
   }
 

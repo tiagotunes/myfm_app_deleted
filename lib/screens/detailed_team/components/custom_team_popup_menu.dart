@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
@@ -71,18 +72,34 @@ class CustomTeamPopupMenu extends StatelessWidget {
           print('Share team');
         } else if (value == 7) {
           // print('Delete team');
-          DatabaseHelper.deleteTeam(team);
-          Navigator.pushNamed(
-            context,
-            HomeScreen.routeName,
-            arguments: {'user': user},
-          );
-          Navigator.pushNamed(
-            context,
-            TeamsScreen.routeName,
-            arguments: {'user': user},
-          );
+          showConfirmationModal(context);
         }
+      },
+    );
+  }
+
+  Future<dynamic> showConfirmationModal(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          icon: Icons.delete_forever,
+          text: 'Are you sure you want to delete ${team.name}?',
+          btnText: 'Delete',
+          press: () {
+            DatabaseHelper.deleteTeam(team);
+            Navigator.pushNamed(
+              context,
+              HomeScreen.routeName,
+              arguments: {'user': user},
+            );
+            Navigator.pushNamed(
+              context,
+              TeamsScreen.routeName,
+              arguments: {'user': user},
+            );
+          },
+        );
       },
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfm_app/components/country_picker.dart';
+import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/constants.dart';
@@ -138,8 +139,16 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                 );
                 if (widget.team != null) {
                   DatabaseHelper.updateTeam(newTeam);
-                  showSaveSuccessModal(context);
-                  Future.delayed(const Duration(seconds: 2), () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const CustomAlertDialog(
+                        icon: Icons.save,
+                        text: 'Team updated successfully',
+                      );
+                    },
+                  );
+                  Future.delayed(const Duration(seconds: 3), () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       TeamsScreen.routeName,
@@ -157,52 +166,29 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                   });
                 } else {
                   DatabaseHelper.addTeam(newTeam);
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    TeamsScreen.routeName,
-                    ModalRoute.withName(HomeScreen.routeName),
-                    arguments: {'user': widget.user},
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const CustomAlertDialog(
+                        icon: Icons.check_circle,
+                        text: 'Team created successfully',
+                      );
+                    },
                   );
+                  Future.delayed(const Duration(seconds: 3), () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      TeamsScreen.routeName,
+                      ModalRoute.withName(HomeScreen.routeName),
+                      arguments: {'user': widget.user},
+                    );
+                  });
                 }
               }
             },
           ),
         ],
       ),
-    );
-  }
-
-  Future<dynamic> showSaveSuccessModal(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: getProportionateScreenHeight(110),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
-              Icon(
-                Icons.save,
-                size: getProportionateScreenWidth(25),
-              ),
-              const Spacer(),
-              Text(
-                'Your team was updated successfully',
-                style: TextStyle(
-                    color: kPrimaryColor,
-                    fontSize: getProportionateScreenWidth(16),
-                    fontWeight: FontWeight.bold),
-              ),
-              const Spacer(flex: 2),
-            ],
-          ),
-        );
-      },
     );
   }
 

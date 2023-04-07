@@ -125,7 +125,7 @@ class _TeamInformationState extends State<TeamInformation> {
 
   InkWell buildInformationItem2(double value, int number, String text) {
     return InkWell(
-      onTap: buildForeignPlayersDialog,
+      onTap: nForeignPlayers > 0 ? buildForeignPlayersDialog : () {},
       child: Column(
         children: [
           const Spacer(flex: 3),
@@ -181,10 +181,10 @@ class _TeamInformationState extends State<TeamInformation> {
               vertical: getProportionateScreenWidth(10),
             ),
             decoration: BoxDecoration(
-              border: Border.all(color: kSecondaryColor.withOpacity(0.3), width: 3),
+              border:
+                  Border.all(color: kSecondaryColor.withOpacity(0.2), width: 3),
               borderRadius: BorderRadius.circular(15),
             ),
-            height: getProportionateScreenHeight(450),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

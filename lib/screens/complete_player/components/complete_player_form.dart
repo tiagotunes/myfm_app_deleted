@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfm_app/components/country_picker.dart';
+import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/components/default_button.dart';
 import 'package:myfm_app/components/form_error.dart';
 import 'package:myfm_app/components/position_picker.dart';
@@ -220,11 +221,28 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                 );
                 if (widget.player != null) {
                   DatabaseHelper.updatePlayer(newPlayer);
-                  showSaveSuccessModal(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const CustomAlertDialog(
+                        icon: Icons.save,
+                        text: 'Player updated successfully',
+                      );
+                    },
+                  );
                 } else {
                   DatabaseHelper.addPlayer(newPlayer);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const CustomAlertDialog(
+                        icon: Icons.check_circle,
+                        text: 'Player created successfully',
+                      );
+                    },
+                  );
                 }
-                Future.delayed(const Duration(seconds: 2), () {
+                Future.delayed(Duration(seconds: widget.player!=null ? 1 : 2), () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     TeamsScreen.routeName,
@@ -246,40 +264,6 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           ),
         ],
       ),
-    );
-  }
-
-  Future<dynamic> showSaveSuccessModal(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: getProportionateScreenHeight(110),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
-              Icon(
-                Icons.save,
-                size: getProportionateScreenWidth(25),
-              ),
-              const Spacer(),
-              Text(
-                'Your player was updated successfully',
-                style: TextStyle(
-                    color: kPrimaryColor,
-                    fontSize: getProportionateScreenWidth(16),
-                    fontWeight: FontWeight.bold),
-              ),
-              const Spacer(flex: 2),
-            ],
-          ),
-        );
-      },
     );
   }
 
