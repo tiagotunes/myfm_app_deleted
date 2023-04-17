@@ -37,6 +37,7 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
   final colorCtr = TextEditingController();
   final imgBadgePathCtr = TextEditingController();
   final imgStadiumPathCtr = TextEditingController();
+  final imgKitPathCtr = TextEditingController();
   bool stadiumEnable = false;
   final List<String> errors = [];
 
@@ -63,6 +64,9 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
       }
       if (widget.team!.imgStadiumPath != null) {
         imgStadiumPathCtr.text = widget.team!.imgStadiumPath!;
+      }
+      if (widget.team!.imgKitPath != null) {
+        imgKitPathCtr.text = widget.team!.imgKitPath!;
       }
     }
   }
@@ -108,6 +112,8 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
           buildBadgeImgFormField(),
           SizedBox(height: getProportionateScreenHeight(25)),
           buildStadiumImgFormField(),
+          SizedBox(height: getProportionateScreenHeight(25)),
+          buildKitImgFormField(),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
@@ -135,6 +141,10 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
                       imgStadiumPathCtr.text.isEmpty || !stadiumEnable
                           ? null
                           : imgStadiumPathCtr.text,
+                  imgKitPath:
+                      imgKitPathCtr.text.isEmpty
+                          ? null
+                          : imgKitPathCtr.text,
                   id: widget.team != null ? widget.team!.id : null,
                 );
                 if (widget.team != null) {
@@ -190,6 +200,34 @@ class _CompleteTeamFormState extends State<CompleteTeamForm> {
         ],
       ),
     );
+  }
+
+  TextFormField buildKitImgFormField() {
+    return TextFormField(
+          onTap: () async {
+            XFile? imgFile =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            setState(() {
+              imgKitPathCtr.text = imgFile!.path;
+            });
+          },
+          readOnly: true,
+          controller: imgKitPathCtr,
+          decoration: InputDecoration(
+            labelText: 'Kit',
+            hintText: 'Choose your team kit',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            suffixIcon: const Icon(Icons.image_outlined),
+            prefixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  imgKitPathCtr.clear();
+                });
+              },
+              icon: const Icon(Icons.clear_outlined),
+            ),
+          ),
+        );
   }
 
   TextFormField buildStadiumImgFormField() {

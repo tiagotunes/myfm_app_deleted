@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:myfm_app/screens/profile/components/profile_menu.dart';
@@ -36,12 +37,7 @@ class _BodyState extends State<Body> {
           icon: 'assets/icons/user_remove.svg',
           text: 'Delete account',
           press: () {
-            DatabaseHelper.deleteAll();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              SplashScreen.routeName,
-              ModalRoute.withName('/'),
-            );
+            showConfirmationModal(context);
           },
         ),
         ProfileMenu(
@@ -55,6 +51,27 @@ class _BodyState extends State<Body> {
           press: () {},
         ),
       ],
+    );
+  }
+
+  Future<dynamic> showConfirmationModal(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          icon: Icons.delete_forever,
+          text: 'Are you sure you want to delete your profile?',
+          btnText: 'Delete',
+          press: () {
+            DatabaseHelper.deleteAll();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              SplashScreen.routeName,
+              ModalRoute.withName('/'),
+            );
+          },
+        );
+      },
     );
   }
 }

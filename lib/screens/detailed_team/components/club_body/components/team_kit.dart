@@ -14,14 +14,13 @@ class TeamKit extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child:
-              // team.imgBadgePath != null
-              //     ? Image.file(File(team.imgBadgePath!)):
-              SvgPicture.asset(
-            'assets/icons/shirt.svg',
-            color: kSecondaryColor,
-            height: double.infinity,
-          ),
+          child: team.imgKitPath != null
+              ? Image.file(File(team.imgKitPath!))
+              : SvgPicture.asset(
+                  'assets/icons/shirt.svg',
+                  color: kSecondaryColor,
+                  height: double.infinity,
+                ),
         ),
         SizedBox(height: getProportionateScreenHeight(8)),
         Row(

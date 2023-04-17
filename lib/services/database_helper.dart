@@ -27,7 +27,7 @@ class DatabaseHelper {
             league TEXT, stadium TEXT, 
             transferBudget INTEGER DEFAULT 0 NOT NULL, wageBudget INTEGER DEFAULT 0 NOT NULL, 
             color TEXT DEFAULT 0xFFFFFFFF NOT NULL, 
-            imgBadgePath TEXT, imgStadiumPath TEXT
+            imgBadgePath TEXT, imgStadiumPath TEXT, imgKitPath TEXT
           );""",
         );
         await db.execute(
