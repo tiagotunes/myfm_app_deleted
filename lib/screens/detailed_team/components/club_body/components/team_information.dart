@@ -33,7 +33,9 @@ class _TeamInformationState extends State<TeamInformation> {
     avgAge = await DatabaseHelper.getAvgPlayersAge(widget.team);
     nForeignPlayers = await DatabaseHelper.getNumberForeigPlayers(widget.team);
     foreignPlayers = await DatabaseHelper.getForeigPlayers(widget.team);
-    foreignPlayers!.sort((a, b) => a.nation.compareTo(b.nation));
+    if (foreignPlayers != null) {
+      foreignPlayers!.sort((a, b) => a.nation.compareTo(b.nation));
+    }
     perForeignPlayers = nPlayers == 0 ? 0 : nForeignPlayers / nPlayers;
     squadValue = await DatabaseHelper.getSquadValue(widget.team);
     setState(() {});

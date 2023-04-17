@@ -116,14 +116,15 @@ class DatabaseHelper {
   static Future<int> deleteTeam(Team team) async {
     final db = await _getDB();
     return await db.delete(
-      'Teams',
-      where: 'id = ?',
-      whereArgs: [team.id],
-    ) + await db.delete(
-      'Players',
-      where: 'teamId = ?',
-      whereArgs: [team.id],
-    );
+          'Teams',
+          where: 'id = ?',
+          whereArgs: [team.id],
+        ) +
+        await db.delete(
+          'Players',
+          where: 'teamId = ?',
+          whereArgs: [team.id],
+        );
   }
 
   static Future<List<Team>?> getAllTeams() async {
@@ -147,7 +148,7 @@ class DatabaseHelper {
   }
 
   static Future<double> getAvgPlayersAge(Team team) async {
-    double avg=0;
+    double avg = 0;
     int total = await DatabaseHelper.getNumberPlayers(team);
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
@@ -157,7 +158,7 @@ class DatabaseHelper {
       whereArgs: [team.id],
     );
     if (maps.isNotEmpty) {
-      double sum=0;
+      double sum = 0;
       for (var i in maps) {
         int year = DateTime.parse(i['birthdate']).year;
         sum += year;
@@ -199,7 +200,10 @@ class DatabaseHelper {
       where: 'teamId = ?',
       whereArgs: [team.id],
     ));
-    return value!;
+    if (value != null) {
+      return value;
+    }
+    return 0;
   }
 
   static Future<List<Player>?> getAllPlayers(Team team) async {
@@ -247,8 +251,6 @@ class DatabaseHelper {
       whereArgs: [player.id],
     );
   }
-
-
 
   static Future<int> deleteAll() async {
     final db = await _getDB();
