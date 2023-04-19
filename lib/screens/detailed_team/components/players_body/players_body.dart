@@ -4,6 +4,7 @@ import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
+import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_card.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_tile.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
@@ -124,30 +125,21 @@ class _PlayersBodyState extends State<PlayersBody> {
           ),
           child: GestureDetector(
             onTap: () {
-              // showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       contentPadding:
-              //           EdgeInsets.all(getProportionateScreenWidth(15)),
-              //       content: SizedBox(
-              //         width: double.infinity,
-              //         child: Row(
-              //           children: [Text(playersPos[index].name)],
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // );
-              Navigator.pushNamed(
-                context,
-                CompletePlayerScreen.routeName,
-                arguments: {
-                  'user': widget.user,
-                  'team': widget.team,
-                  'player': playersPos[index]
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return PlayerCard(player: playersPos[index], team: widget.team);
                 },
               );
+              // Navigator.pushNamed(
+              //   context,
+              //   CompletePlayerScreen.routeName,
+              //   arguments: {
+              //     'user': widget.user,
+              //     'team': widget.team,
+              //     'player': playersPos[index]
+              //   },
+              // );
             },
             child: PlayerTile(
               player: playersPos[index],

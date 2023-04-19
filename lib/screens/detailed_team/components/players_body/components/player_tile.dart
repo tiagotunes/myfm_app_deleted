@@ -12,23 +12,9 @@ class PlayerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double grayscale = (0.299 * Color(int.parse(team.color!)).red) +
-        (0.587 * Color(int.parse(team.color!)).green) +
-        (0.114 * Color(int.parse(team.color!)).blue);
-    // print(grayscale);
-
     return Container(
       padding: EdgeInsets.all(getProportionateScreenWidth(4)),
       decoration: BoxDecoration(
-        // gradient: LinearGradient(
-        //   begin: Alignment.centerRight,
-        //   end: Alignment.centerLeft,
-        //   stops: const [0.0, 0.15],
-        //   colors: [
-        //     Color(int.parse(team.color!)),
-        //     Colors.white,
-        //   ],
-        // ),
         border: Border.all(
           color: kSecondaryColor.withOpacity(0.5),
           width: 2,
@@ -37,45 +23,15 @@ class PlayerTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              CircleAvatar(
-                radius: getProportionateScreenWidth(25),
-                backgroundImage:
-                    const AssetImage('assets/images/default_user.png'),
+          Container(
+            width: getProportionateScreenWidth(45),
+            height: getProportionateScreenWidth(45),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              image: DecorationImage(
+                image: AssetImage('assets/images/default_user1.png'),
               ),
-              player.number != null
-                  ? Container(
-                      width: getProportionateScreenWidth(20),
-                      height: getProportionateScreenWidth(20),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(int.parse(team.color!)),
-                          border: Border.all(
-                            color: Color(int.parse(team.color!)),
-                            width: 2,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: kSecondaryColor,
-                              offset: Offset(1, 2),
-                              blurRadius: 3,
-                            ),
-                          ]),
-                      child: Text(
-                        player.number!.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: grayscale > 140 ? Colors.black : Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: getProportionateScreenWidth(11),
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
-            ],
+            ),
           ),
           SizedBox(width: getProportionateScreenWidth(13)),
           Expanded(
@@ -121,24 +77,6 @@ class PlayerTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(
-                //     horizontal: getProportionateScreenWidth(6),
-                //   ),
-                //   child: Stack(
-                //     children: [
-                //       Text(
-                //         player.number != null ? player.number!.toString() : '',
-                //         style: TextStyle(
-                //           color: Colors.white,
-                //           letterSpacing: -2,
-                //           fontSize: getProportionateScreenWidth(18),
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
