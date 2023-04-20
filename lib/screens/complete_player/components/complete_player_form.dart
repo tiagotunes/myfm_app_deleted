@@ -36,9 +36,11 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   final nationCtr = TextEditingController();
   String nationFlagCtr = "";
   final birthdateCtr = TextEditingController();
-  final primaryPosCtr = TextEditingController();
-  String primaryPos = "";
-  List<dynamic> secondaryPos = [];
+  final naturalPosCtr = TextEditingController();
+  String naturalPos = "";
+  List<dynamic> accomplishedPos = [];
+  List<dynamic> unconvincingPos = [];
+  List<dynamic> awkwardPos = [];
   bool leftFoot = false;
   bool rightFoot = false;
   final heightCtr = TextEditingController();
@@ -65,9 +67,11 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       nationCtr.text = widget.player!.nation;
       nationFlagCtr = widget.player!.nationFlag;
       birthdateCtr.text = widget.player!.birthdate.toString();
-      primaryPos = widget.player!.primaryPosition.toString();
-      initPositionDropdown(primaryPos);
-      secondaryPos = jsonDecode(widget.player!.secondaryPosition!);
+      naturalPos = widget.player!.naturalPosition.toString();
+      initPositionDropdown(naturalPos);
+      accomplishedPos = jsonDecode(widget.player!.accomplishedPosition!);
+      unconvincingPos = jsonDecode(widget.player!.unconvincingPosition!);
+      awkwardPos = jsonDecode(widget.player!.awkwardPosition!);
       leftFoot = widget.player!.leftFoot == 1 ? true : false;
       rightFoot = widget.player!.rightFoot == 1 ? true : false;
       if (widget.player!.height != null) {
@@ -93,46 +97,46 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   void initPositionDropdown(String pos) {
     switch (pos) {
       case 'GK':
-        primaryPosCtr.text = "Goalkeeper";
+        naturalPosCtr.text = "Goalkeeper";
         break;
       case 'CB':
-        primaryPosCtr.text = "Defense (Center)";
+        naturalPosCtr.text = "Defense (Center)";
         break;
       case 'LB':
-        primaryPosCtr.text = "Defense (Left)";
+        naturalPosCtr.text = "Defense (Left)";
         break;
       case 'RB':
-        primaryPosCtr.text = "Defense (Right)";
+        naturalPosCtr.text = "Defense (Right)";
         break;
       case 'LWB':
-        primaryPosCtr.text = "Wing Back (Left)";
+        naturalPosCtr.text = "Wing Back (Left)";
         break;
       case 'RWB':
-        primaryPosCtr.text = "Wing Back (Right)";
+        naturalPosCtr.text = "Wing Back (Right)";
         break;
       case 'DM':
-        primaryPosCtr.text = "Defensive Midfielder";
+        naturalPosCtr.text = "Defensive Midfielder";
         break;
       case 'CM':
-        primaryPosCtr.text = "Midfielder (Center)";
+        naturalPosCtr.text = "Midfielder (Center)";
         break;
       case 'LM':
-        primaryPosCtr.text = "Midfielder (Left)";
+        naturalPosCtr.text = "Midfielder (Left)";
         break;
       case 'RM':
-        primaryPosCtr.text = "Midfielder (Right)";
+        naturalPosCtr.text = "Midfielder (Right)";
         break;
       case 'AMC':
-        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        naturalPosCtr.text = "Attacking Midfielder (Center)";
         break;
       case 'AML':
-        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        naturalPosCtr.text = "Attacking Midfielder (Center)";
         break;
       case 'AMR':
-        primaryPosCtr.text = "Attacking Midfielder (Center)";
+        naturalPosCtr.text = "Attacking Midfielder (Center)";
         break;
       case 'ST':
-        primaryPosCtr.text = "Striker";
+        naturalPosCtr.text = "Striker";
         break;
       default:
     }
@@ -201,8 +205,10 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   nation: nationCtr.text,
                   nationFlag: nationFlagCtr,
                   birthdate: birthdateCtr.text,
-                  primaryPosition: primaryPos,
-                  secondaryPosition: jsonEncode(secondaryPos),
+                  naturalPosition: naturalPos,
+                  accomplishedPosition: jsonEncode(accomplishedPos),
+                  unconvincingPosition: jsonEncode(unconvincingPos),
+                  awkwardPosition: jsonEncode(awkwardPos),
                   leftFoot: leftFoot ? 1 : 0,
                   rightFoot: rightFoot ? 1 : 0,
                   height:
@@ -242,7 +248,8 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                     },
                   );
                 }
-                Future.delayed(Duration(seconds: widget.player!=null ? 1 : 2), () {
+                Future.delayed(Duration(seconds: widget.player != null ? 1 : 2),
+                    () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     TeamsScreen.routeName,
@@ -300,10 +307,16 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
     int remainder = ((value - intValue) * 2).toInt();
     List<Widget> widgetList = List.generate(
       intValue,
-      (index) => const Icon(Icons.star, color: Colors.amber,),
+      (index) => const Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
     );
     if (remainder == 1) {
-      widgetList.add(const Icon(Icons.star_half, color: Colors.amber,));
+      widgetList.add(const Icon(
+        Icons.star_half,
+        color: Colors.amber,
+      ));
     }
     widgetList.addAll(List.generate(
       5 - intValue - remainder,
@@ -609,35 +622,42 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       left: getProportionateScreenWidth(x),
       child: InkWell(
         onTap: () {
-          if (primaryPos == '') {
+          if (naturalPos == '') {
             showInfoToast("Please choose primary position", 2);
-          } else if (primaryPos != pos) {
-            if (!secondaryPos.contains(pos)) {
-              setState(() {
-                secondaryPos.add(pos);
-                // print(secondaryPos);
-              });
-              showInfoToast(pos, 1);
-            } else {
-              setState(() {
-                secondaryPos.remove(pos);
-                // print(secondaryPos);
-              });
+          } else if (naturalPos != pos) {
+            if (accomplishedPos.contains(pos)) {
+              accomplishedPos.remove(pos);
+              unconvincingPos.add(pos);
+            } else if (unconvincingPos.contains(pos)) {
+              unconvincingPos.remove(pos);
+              awkwardPos.add(pos);
+            } else if (awkwardPos.contains(pos)) {
+              awkwardPos.remove(pos);
               showInfoToast('$pos removed', 1);
+            } else {
+              accomplishedPos.add(pos);
             }
+            setState(() {});
           } else {
             showInfoToast("$pos is the primary position", 2);
           }
+          // print("A -> ${secondaryPos}");
+          // print("B -> ${unconvincingPos}");
+          // print("C -> ${makeshitPos}");
         },
         child: Container(
           width: getProportionateScreenWidth(17),
           height: getProportionateScreenWidth(17),
           decoration: BoxDecoration(
-            color: primaryPos == pos
-                ? Colors.green
-                : secondaryPos.contains(pos)
-                    ? Colors.lightGreen
-                    : kSecondaryColor,
+            color: naturalPos == pos
+                ? kNaturalPosition
+                : accomplishedPos.contains(pos)
+                    ? kAccomplishedPosition
+                    : unconvincingPos.contains(pos)
+                        ? kUnconvincingPosition
+                        : awkwardPos.contains(pos)
+                            ? kAwkwardPosition
+                            : kSecondaryColor,
             shape: BoxShape.circle,
             boxShadow: const [
               BoxShadow(
@@ -662,26 +682,26 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
           },
         );
         if (result != null) {
-          primaryPosCtr.text = result.position;
-          primaryPos = result.pos;
+          naturalPosCtr.text = result.position;
+          naturalPos = result.pos;
           removeError(kPositionNullError);
           setState(() {});
           // print(primaryPos);
         }
       },
       readOnly: true,
-      controller: primaryPosCtr,
+      controller: naturalPosCtr,
       decoration: InputDecoration(
         labelText: 'Primary position',
         hintText: 'Choose player primary position',
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: primaryPosCtr.text.isEmpty
+        suffixIcon: naturalPosCtr.text.isEmpty
             ? const Icon(Icons.sports_soccer_outlined)
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    primaryPos,
+                    naturalPos,
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),

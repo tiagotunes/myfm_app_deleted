@@ -49,33 +49,104 @@ class PlayerCard extends StatelessWidget {
             SizedBox(height: getProportionateScreenHeight(15)),
             buildContainersSbS(shirtName, grayscale),
             SizedBox(height: getProportionateScreenHeight(5)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: getProportionateScreenWidth(120),
-                  child: Column(
-                    children: [
-                      buildPlayerNation(),
-                      Text(
-                        "${team.year - DateTime.parse(player.birthdate).year} years",
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: getProportionateScreenWidth(130),
-                  child: buildAbilityStars(
-                    emptyStars,
-                    potentialStars,
-                    abilityStars,
-                  ),
-                ),
-              ],
+            buildPlayerInfo1(emptyStars, potentialStars, abilityStars),
+            buildFootballField(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container buildFootballField() {
+    return Container(
+      height: getProportionateScreenHeight(240),
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/football_field.png'),
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+      child: Stack(
+        children: [
+          buildPositionDot(15, 111, 'GK'),
+          buildPositionDot(42, 111, 'CB'),
+          buildPositionDot(42, 34, 'LB'),
+          buildPositionDot(42, 189, 'RB'),
+          buildPositionDot(85, 34, 'LWB'),
+          buildPositionDot(85, 189, 'RWB'),
+          buildPositionDot(85, 111, 'DM'),
+          buildPositionDot(127, 111, 'CM'),
+          buildPositionDot(127, 34, 'LM'),
+          buildPositionDot(127, 189, 'RM'),
+          buildPositionDot(177, 111, 'AMC'),
+          buildPositionDot(177, 34, 'AML'),
+          buildPositionDot(177, 189, 'AMR'),
+          buildPositionDot(218, 111, 'ST'),
+        ],
+      ),
+    );
+  }
+
+  Positioned buildPositionDot(double x, double y, String pos) {
+    return Positioned(
+      top: getProportionateScreenHeight(y),
+      left: getProportionateScreenWidth(x),
+      child: Container(
+        width: getProportionateScreenWidth(15),
+        height: getProportionateScreenWidth(15),
+        decoration: BoxDecoration(
+          color: player.naturalPosition == pos
+              ? kNaturalPosition
+              : player.accomplishedPosition!.contains(pos)
+                  ? kAccomplishedPosition
+                  : player.unconvincingPosition!.contains(pos)
+                      ? kUnconvincingPosition
+                      : player.awkwardPosition!.contains(pos)
+                          ? kAwkwardPosition
+                          : Colors.transparent,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: (player.naturalPosition == pos ||
+                      player.accomplishedPosition!.contains(pos) ||
+                      player.unconvincingPosition!.contains(pos) ||
+                      player.awkwardPosition!.contains(pos))
+                  ? Colors.black38
+                  : Colors.transparent,
+              offset: const Offset(-1, 0),
+              blurRadius: 2,
             )
           ],
         ),
       ),
+    );
+  }
+
+  Row buildPlayerInfo1(List<Widget> emptyStars, List<Widget> potentialStars,
+      List<Widget> abilityStars) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(
+          width: getProportionateScreenWidth(120),
+          child: Column(
+            children: [
+              buildPlayerNation(),
+              Text(
+                "${team.year - DateTime.parse(player.birthdate).year} years",
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: getProportionateScreenWidth(130),
+          child: buildAbilityStars(
+            emptyStars,
+            potentialStars,
+            abilityStars,
+          ),
+        ),
+      ],
     );
   }
 
@@ -118,10 +189,6 @@ class PlayerCard extends StatelessWidget {
           color: Colors.amber,
         ));
       }
-      // aL.addAll(List.generate(
-      //   5 - intValue - remainder,
-      //   (index) => const Icon(Icons.star_border_outlined),
-      // ));
     }
     if (player.potential != null) {
       int intValue = player.potential!.floor();
@@ -130,13 +197,13 @@ class PlayerCard extends StatelessWidget {
         intValue,
         (index) => Icon(
           Icons.star,
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.amber[200],
         ),
       );
       if (remainder == 1) {
         pL.add(Icon(
           Icons.star_half,
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.amber[200],
         ));
       }
     }
@@ -144,7 +211,7 @@ class PlayerCard extends StatelessWidget {
       5,
       (index) => Icon(
         Icons.star,
-        color: kSecondaryColor.withOpacity(0.6),
+        color: kSecondaryColor.withOpacity(0.4),
       ),
     );
     return [aL, pL, eL];
@@ -189,6 +256,12 @@ class PlayerCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
+        border: Border.all(
+          color: Color(int.parse(team.color!)) == Colors.white
+              ? Colors.black87
+              : Colors.transparent,
+          width: 2,
+        ),
       ),
       child: Column(
         children: [
@@ -196,7 +269,7 @@ class PlayerCard extends StatelessWidget {
             shirtName,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: grayscale > 140 ? Colors.black : Colors.white,
               fontSize: getProportionateScreenWidth(17),
               fontWeight: FontWeight.w600,
             ),
@@ -209,7 +282,7 @@ class PlayerCard extends StatelessWidget {
                       player.number.toString(),
                       style: TextStyle(
                         color: grayscale > 140 ? Colors.black : Colors.white,
-                        letterSpacing: getProportionateScreenWidth(-2),
+                        letterSpacing: getProportionateScreenWidth(-4),
                         fontSize: getProportionateScreenWidth(40),
                         fontWeight: FontWeight.bold,
                       ),

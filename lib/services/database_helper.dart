@@ -34,7 +34,7 @@ class DatabaseHelper {
           """CREATE TABLE Players(
             id INTEGER PRIMARY KEY, teamId INTEGER NOT NULL,
             name TEXT NOT NULL, nation TEXT NOT NULL, nationFlag TEXT NOT NULL, birthdate TEXT NOT NULL,
-            primaryPosition TEXT NOT NULL, secondaryPosition TEXT,
+            naturalPosition TEXT NOT NULL, accomplishedPosition TEXT, unconvincingPosition TEXT, awkwardPosition TEXT,
             leftFoot INTEGER NOT NULL, rightFoot INTEGER NOT NULL,
             height INTEGER, number INTEGER,
             value INTEGER DEFAULT 0 NOT NULL, wage INTEGER DEFAULT 0 NOT NULL, releaseClause INTEGER,

@@ -2,8 +2,8 @@ class Player {
   final int? id;
   final int? teamId;
   final String name, nation, nationFlag, birthdate;
-  final String primaryPosition;
-  final String? secondaryPosition;
+  final String naturalPosition;
+  final String? accomplishedPosition, unconvincingPosition, awkwardPosition;
   final int? leftFoot, rightFoot;
   final int? height, number;
   final int? value, wage, releaseClause;
@@ -19,8 +19,10 @@ class Player {
     required this.nation,
     required this.nationFlag,
     required this.birthdate,
-    required this.primaryPosition,
-    this.secondaryPosition,
+    required this.naturalPosition,
+    this.accomplishedPosition,
+    this.unconvincingPosition,
+    this.awkwardPosition,
     required this.leftFoot,
     required this.rightFoot,
     this.height,
@@ -43,8 +45,10 @@ class Player {
         nation: json['nation'],
         nationFlag: json['nationFlag'],
         birthdate: json['birthdate'],
-        primaryPosition: json['primaryPosition'],
-        secondaryPosition: json['secondaryPosition'],
+        naturalPosition: json['naturalPosition'],
+        accomplishedPosition: json['accomplishedPosition'],
+        unconvincingPosition: json['unconvincingPosition'],
+        awkwardPosition: json['awkwardPosition'],
         leftFoot: json['leftFoot'],
         rightFoot: json['rightFoot'],
         height: json['height'],
@@ -67,8 +71,10 @@ class Player {
         'nation': nation,
         'nationFlag': nationFlag,
         'birthdate': birthdate,
-        'primaryPosition': primaryPosition,
-        'secondaryPosition': secondaryPosition,
+        'naturalPosition': naturalPosition,
+        'accomplishedPosition': accomplishedPosition,
+        'unconvincingPosition': unconvincingPosition,
+        'awkwardPosition': awkwardPosition,
         'leftFoot': leftFoot,
         'rightFoot': rightFoot,
         'height': height,

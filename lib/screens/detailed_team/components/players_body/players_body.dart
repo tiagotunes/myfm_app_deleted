@@ -3,7 +3,6 @@ import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
-import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_card.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/components/player_tile.dart';
 import 'package:myfm_app/services/database_helper.dart';
@@ -30,59 +29,59 @@ class _PlayersBodyState extends State<PlayersBody> {
         if (snapshot.hasData) {
           return ListView(
             children: [
-              snapshot.data!.any((element) => element.primaryPosition == 'GK')
+              snapshot.data!.any((element) => element.naturalPosition == 'GK')
                   ? buildPositionLabel('GK')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'GK'),
-              snapshot.data!.any((element) => element.primaryPosition == 'CB')
+              snapshot.data!.any((element) => element.naturalPosition == 'CB')
                   ? buildPositionLabel('CB')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'CB'),
-              snapshot.data!.any((element) => element.primaryPosition == 'LB')
+              snapshot.data!.any((element) => element.naturalPosition == 'LB')
                   ? buildPositionLabel('LB')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LB'),
-              snapshot.data!.any((element) => element.primaryPosition == 'LWB')
+              snapshot.data!.any((element) => element.naturalPosition == 'LWB')
                   ? buildPositionLabel('LWB')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LWB'),
-              snapshot.data!.any((element) => element.primaryPosition == 'RB')
+              snapshot.data!.any((element) => element.naturalPosition == 'RB')
                   ? buildPositionLabel('RB')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RB'),
-              snapshot.data!.any((element) => element.primaryPosition == 'RWB')
+              snapshot.data!.any((element) => element.naturalPosition == 'RWB')
                   ? buildPositionLabel('RWB')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RWB'),
-              snapshot.data!.any((element) => element.primaryPosition == 'DM')
+              snapshot.data!.any((element) => element.naturalPosition == 'DM')
                   ? buildPositionLabel('DM')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'DM'),
-              snapshot.data!.any((element) => element.primaryPosition == 'CM')
+              snapshot.data!.any((element) => element.naturalPosition == 'CM')
                   ? buildPositionLabel('CM')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'CM'),
-              snapshot.data!.any((element) => element.primaryPosition == 'LM')
+              snapshot.data!.any((element) => element.naturalPosition == 'LM')
                   ? buildPositionLabel('LM')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'LM'),
-              snapshot.data!.any((element) => element.primaryPosition == 'RM')
+              snapshot.data!.any((element) => element.naturalPosition == 'RM')
                   ? buildPositionLabel('RM')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'RM'),
-              snapshot.data!.any((element) => element.primaryPosition == 'AMC')
+              snapshot.data!.any((element) => element.naturalPosition == 'AMC')
                   ? buildPositionLabel('AMC')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AMC'),
-              snapshot.data!.any((element) => element.primaryPosition == 'AML')
+              snapshot.data!.any((element) => element.naturalPosition == 'AML')
                   ? buildPositionLabel('AML')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AML'),
-              snapshot.data!.any((element) => element.primaryPosition == 'AMR')
+              snapshot.data!.any((element) => element.naturalPosition == 'AMR')
                   ? buildPositionLabel('AMR')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'AMR'),
-              snapshot.data!.any((element) => element.primaryPosition == 'ST')
+              snapshot.data!.any((element) => element.naturalPosition == 'ST')
                   ? buildPositionLabel('ST')
                   : const SizedBox(),
               buildPositionPlayers(snapshot.data!, 'ST'),
@@ -106,7 +105,7 @@ class _PlayersBodyState extends State<PlayersBody> {
 
   ListView buildPositionPlayers(List<Player> players, String position) {
     List<Player>? playersPos = players
-        .where((element) => element.primaryPosition == position)
+        .where((element) => element.naturalPosition == position)
         .toList();
     if (playersPos.length > 1) {
       playersPos.sort(mySort);

@@ -13,6 +13,14 @@ const kPrimaryGradientColor = LinearGradient(
 const kSecondaryColor = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
 
+const kNaturalPosition = Color(0xFF0BFE70);
+const kAccomplishedPosition = Color(0xFF02B71C);
+const kCompetentPosition = Color(0xFFA4BB00);
+const kUnconvincingPosition = Color(0xFFC49200);
+const kAwkwardPosition = Color(0xFFC25A05);
+const kMakeshitPosition = Color(0xFFCA350B);
+const kPoorPosition = Color(0xFFFD5650);
+
 final Map<ColorSwatch<Object>, String> kCustomSwatches =
     <ColorSwatch<Object>, String>{
   ColorTools.createPrimarySwatch(Colors.white): 'White',
