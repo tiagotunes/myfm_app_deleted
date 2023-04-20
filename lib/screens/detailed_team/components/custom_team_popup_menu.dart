@@ -5,6 +5,7 @@ import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/complete_player/complete_player_screen.dart';
 import 'package:myfm_app/screens/complete_team/complete_team_screen.dart';
 import 'package:myfm_app/screens/home/home_screen.dart';
+import 'package:myfm_app/screens/splash/splash_screen.dart';
 import 'package:myfm_app/screens/teams/teams_screen.dart';
 import 'package:myfm_app/services/database_helper.dart';
 import 'package:myfm_app/size_config.dart';
@@ -88,6 +89,11 @@ class CustomTeamPopupMenu extends StatelessWidget {
           btnText: 'Delete',
           press: () {
             DatabaseHelper.deleteTeam(team);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              SplashScreen.routeName,
+              ModalRoute.withName('/'),
+            );
             Navigator.pushNamed(
               context,
               HomeScreen.routeName,

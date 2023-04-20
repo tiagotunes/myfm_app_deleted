@@ -128,18 +128,13 @@ class _PlayersBodyState extends State<PlayersBody> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return PlayerCard(player: playersPos[index], team: widget.team);
+                  return PlayerCard(
+                    user: widget.user,
+                    team: widget.team,
+                    player: playersPos[index],
+                  );
                 },
               );
-              // Navigator.pushNamed(
-              //   context,
-              //   CompletePlayerScreen.routeName,
-              //   arguments: {
-              //     'user': widget.user,
-              //     'team': widget.team,
-              //     'player': playersPos[index]
-              //   },
-              // );
             },
             child: PlayerTile(
               player: playersPos[index],
