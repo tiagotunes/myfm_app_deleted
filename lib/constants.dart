@@ -2,6 +2,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:myfm_app/size_config.dart';
 
+const currency = "€";
+
 const kPrimaryColor = Color(0xFF000000);
 const kFmColor = Color(0xFF611EA2);
 const kPrimaryLightColor = Color(0xFFFFECDF);

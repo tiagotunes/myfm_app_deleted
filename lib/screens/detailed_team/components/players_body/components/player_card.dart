@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:myfm_app/components/custom_alert_dialog.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
@@ -49,11 +50,74 @@ class PlayerCard extends StatelessWidget {
             SizedBox(height: getProportionateScreenHeight(15)),
             buildContainersSbS(shirtName, grayscale),
             SizedBox(height: getProportionateScreenHeight(5)),
-            buildPlayerInfo1(emptyStars, potentialStars, abilityStars),
+            buildPlayerBasics(emptyStars, potentialStars, abilityStars),
             buildFootballField(),
+            buildPlayerFinancial()
           ],
         ),
       ),
+    );
+  }
+
+  Padding buildPlayerFinancial() {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
+      child: Column(
+        children: [
+          buildFinancialInfo('Value', player.value!),
+          SizedBox(height: getProportionateScreenHeight(5)),
+          player.releaseClause != null
+              ? Column(
+                  children: [
+                    buildFinancialRcInfo(player.releaseClause!, player.value!),
+                    SizedBox(height: getProportionateScreenHeight(5)),
+                  ],
+                )
+              : const SizedBox(),
+          buildFinancialInfo('Wage', player.wage!),
+          SizedBox(height: getProportionateScreenHeight(5)),
+        ],
+      ),
+    );
+  }
+
+  Row buildFinancialRcInfo(int releaseClause, int value) {
+    var fV = NumberFormat('###,###,###');
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Release Clause',
+          style: TextStyle(
+            color: Colors.black54,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          "${fV.format(releaseClause)} $currency",
+          style: TextStyle(
+            color: value > releaseClause ? Colors.red : Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildFinancialInfo(String text, int value) {
+    var fV = NumberFormat('###,###,###');
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            color: Colors.black54,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text("${fV.format(value)} $currency"),
+      ],
     );
   }
 
@@ -122,7 +186,7 @@ class PlayerCard extends StatelessWidget {
     );
   }
 
-  Row buildPlayerInfo1(List<Widget> emptyStars, List<Widget> potentialStars,
+  Row buildPlayerBasics(List<Widget> emptyStars, List<Widget> potentialStars,
       List<Widget> abilityStars) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
