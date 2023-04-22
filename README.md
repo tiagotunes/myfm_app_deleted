@@ -65,7 +65,7 @@ To create a team, you need to fill some attributtes. The first 3 (name, country 
 
 
 ### Player
-To create a player, you need to fill some attributtes. The first 4 (name, nation, birthdate and primaryPosition) are required and the rest are optional.  
+To create a player, you need to fill some attributtes. The first 4 (name, nation, birthdate and naturalPosition) are required and the rest are optional.  
 
 
     CREATE TABLE Players(
