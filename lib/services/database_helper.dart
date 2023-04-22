@@ -16,7 +16,8 @@ class DatabaseHelper {
         await db.execute(
           """CREATE TABLE Users(
             id INTEGER PRIMARY KEY, 
-            name TEXT NOT NULL, country TEXT NOT NULL, countryFlag TEXT NOT NULL, birthdate TEXT NOT NULL, 
+            name TEXT NOT NULL, country TEXT NOT NULL, countryFlag TEXT NOT NULL,
+            birthdate TEXT NOT NULL, 
             imgPath TEXT
           );""",
         );

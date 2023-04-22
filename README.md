@@ -1,5 +1,7 @@
 # MyFM App
 
+<img src="assets/logo/myfm_logo.png" width="135">
+
 Build an app where you can manage your Football Manager teams from your pocket.
 
 ---
@@ -21,8 +23,11 @@ samples, guidance on mobile development, and a full API reference.
 
 ## To be done
 
-- Add isOnLOan (and loanTo) to player model
-- Instead of number of players in national team put value of squad (or maybe put that in finances container, I want to replace the nation team players)
+- Add `isOnLOan` and `loanTo` to player model (show Player Tile with low opacity)
+- Financial Box 
+    - Bank Balance ?
+    - Transfer Budget
+    - Wage Budget (check if team is "overwaged" and see the difference)
 
 ---
 
@@ -55,8 +60,7 @@ To create a team, you need to fill some attributtes. The first 3 (name, country 
         transferBudget INTEGER DEFAULT 0 NOT NULL,
         wageBudget INTEGER DEFAULT 0 NOT NULL,
         color TEXT DEFAULT 0xFFFFFFFF NOT NULL,
-        imgBadgePath TEXT,
-        imgStadiumPath TEXT,
+        imgBadgePath TEXT, imgStadiumPath TEXT, imgKitPath TEXT
     );
 
 
@@ -70,17 +74,19 @@ To create a player, you need to fill some attributtes. The first 4 (name, nation
         name TEXT NOT NULL, 
         nation TEXT NOT NULL, nationFlag TEXT NOT NULL, 
         birthdate TEXT NOT NULL,
-        primaryPosition TEXT NOT NULL,
-        secondaryPosition TEXT,
+        naturalPosition TEXT NOT NULL,
+        accomplishedPosition TEXT, 
+        unconvincingPosition TEXT, 
+        awkwardPosition TEXT,
         leftFoot INTEGER NOT NULL, rightFoot INTEGER NOT NULL,
+        height INTEGER, 
+        number INTEGER,
         value INTEGER DEFAULT 0 NOT NULL,
         wage INTEGER DEFAULLT 0 NOT NULL,
         releaseClause INTEGER,
-        ability REAL, 
-        potential REAL,
+        ability REAL, potential REAL,
         isNationalTeam INTEGER DEFAULT 0 NOT NULL,
-        isLoaned INTEGER DEFAULT 0 NOT NULL,
-        loanFrom TEXT, 
+        isLoaned INTEGER DEFAULT 0 NOT NULL, loanFrom TEXT, 
         imgPath TEXT,
     );
 
