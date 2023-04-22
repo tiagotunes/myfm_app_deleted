@@ -127,10 +127,12 @@ class _PlayersBodyState extends State<PlayersBody> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return PlayerCard(
-                    user: widget.user,
-                    team: widget.team,
-                    player: playersPos[index],
+                  return GestureDetector(
+                    child: PlayerCard(
+                      user: widget.user,
+                      team: widget.team,
+                      player: playersPos[index],
+                    ),
                   );
                 },
               );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -95,7 +97,7 @@ class PlayerCard extends StatelessWidget {
           ),
         ),
         Text(
-          "${fV.format(releaseClause)} $currency",
+          "${fV.format(releaseClause)} ${currencyOptions[currency]}",
           style: TextStyle(
             color: value > releaseClause ? Colors.red : Colors.black,
           ),
@@ -116,7 +118,7 @@ class PlayerCard extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        Text("${fV.format(value)} $currency"),
+        Text("${fV.format(value)} ${currencyOptions[currency]}"),
       ],
     );
   }
@@ -363,9 +365,12 @@ class PlayerCard extends StatelessWidget {
     return Container(
       width: getProportionateScreenWidth(120),
       height: getProportionateScreenWidth(120),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/default_user1.png'),
+          image: player.imgPath != null
+              ? FileImage(File(player.imgPath!)) as ImageProvider
+              : const AssetImage('assets/images/default_user1.png'),
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -431,8 +436,8 @@ class PlayerCard extends StatelessWidget {
         return CustomAlertDialog(
           icon: Icons.delete_forever,
           text:
-              'Are you sure you want to delete ${player.name} from ${team.name}?',
-          btnText: 'Delete',
+              'Are you sure you want to remove ${player.name} from ${team.name}?',
+          btnText: 'Remove',
           press: () {
             DatabaseHelper.deletePlayer(player);
             Navigator.pushNamedAndRemoveUntil(

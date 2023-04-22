@@ -91,6 +91,9 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       if (widget.player!.potential != null) {
         potentialSlider = widget.player!.potential!;
       }
+      if (widget.player!.imgPath != null) {
+        imgPathCtr.text = widget.player!.imgPath!;
+      }
     }
   }
 

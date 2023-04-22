@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfm_app/constants.dart';
@@ -26,10 +28,13 @@ class PlayerTile extends StatelessWidget {
           Container(
             width: getProportionateScreenWidth(45),
             height: getProportionateScreenWidth(45),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
               image: DecorationImage(
-                image: AssetImage('assets/images/default_user1.png'),
+                image: player.imgPath != null
+                    ? FileImage(File(player.imgPath!)) as ImageProvider
+                    : const AssetImage('assets/images/default_user1.png'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
