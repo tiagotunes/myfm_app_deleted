@@ -4,10 +4,9 @@ import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/team_model.dart';
 import 'package:myfm_app/models/user_model.dart';
 import 'package:myfm_app/screens/detailed_team/components/club_body/club_body.dart';
-import 'package:myfm_app/screens/detailed_team/components/notes_body/notes_body.dart';
+import 'package:myfm_app/screens/detailed_team/components/tactics_body/tactics_body.dart';
 import 'package:myfm_app/screens/detailed_team/components/custom_team_popup_menu.dart';
 import 'package:myfm_app/screens/detailed_team/components/players_body/players_body.dart';
-import 'package:myfm_app/screens/detailed_team/components/staff_body/staff_body.dart';
 import 'package:myfm_app/screens/detailed_team/components/transfers_body/transfers_body.dart';
 import 'package:myfm_app/size_config.dart';
 
@@ -20,7 +19,7 @@ class DetailedTeamScreen extends StatefulWidget {
 }
 
 class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
-  int _currentIndex = 2;
+  int _currentIndex = 0;
   bool firstX = false;
 
   @override
@@ -37,10 +36,9 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
     }
 
     List<Widget> bodyOptions = <Widget>[
-      const NotesBody(),
-      const StaffBody(),
       ClubBody(team: team!),
       PlayersBody(user: user!, team: team),
+      const TacticsBody(),
       const TransfersBody(),
     ];
 
@@ -102,10 +100,9 @@ class _DetailedTeamScreenState extends State<DetailedTeamScreen> {
             ),
             color: Colors.black,
             tabs: [
-              buildGButton(Icons.note_alt_rounded, 'Notes'),
-              buildGButton(Icons.co_present_rounded, 'Staff'),
               buildGButton(Icons.shield_rounded, 'Club'),
               buildGButton(Icons.group_rounded, 'Players'),
+              buildGButton(Icons.note_alt_rounded, 'Tactics'),
               buildGButton(Icons.swap_horiz_rounded, 'Transfers'),
             ],
             selectedIndex: _currentIndex,
