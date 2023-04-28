@@ -80,3 +80,5 @@ const String kPlayerBirthDateInvalidError = "Player is to young to be on the tea
 const String kPlayerHeightInvalidError = "Player height need to be in cm";
 const String kPlayerNumberInvalidError = "Player number is invalid";
 const String kPlayerAbilityInvalidError = "Player ability is invalid";
+const String kPlayerLoanFromNullError = "Player needs to be on loan from a team";
+const String kPlayerLoanToNullError = "Player needs to be loaned to a team";

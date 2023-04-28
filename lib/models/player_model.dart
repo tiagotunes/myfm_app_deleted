@@ -8,8 +8,8 @@ class Player {
   final int? height, number;
   final int? value, wage, releaseClause;
   final double? ability, potential;
-  final int? isNationalTeam, isLoaned;
-  final String? loanFrom;
+  final int? isLoaned, isOnLoan;
+  final String? loanFrom, loanTo;
   final String? imgPath;
 
   const Player({
@@ -32,9 +32,10 @@ class Player {
     this.releaseClause,
     this.ability,
     this.potential,
-    this.isNationalTeam,
-    this.isLoaned,
+    this.isOnLoan,
     this.loanFrom,
+    this.isLoaned,
+    this.loanTo,
     this.imgPath,
   });
 
@@ -58,9 +59,10 @@ class Player {
         releaseClause: json['releaseClause'],
         ability: json['ability'],
         potential: json['potential'],
-        isNationalTeam: json['isNationalTeam'],
-        isLoaned: json['isLoaned'],
+        isOnLoan: json['isOnLoan'],
         loanFrom: json['loanFrom'],
+        isLoaned: json['isLoaned'],
+        loanTo: json['loanTo'],
         imgPath: json['imgPath'],
       );
 
@@ -84,9 +86,10 @@ class Player {
         'releaseClause': releaseClause,
         'ability': ability,
         'potential': potential,
-        'isNationalTeam': isNationalTeam,
-        'isLoaned': isLoaned,
+        'isOnLoan': isOnLoan,
         'loanFrom': loanFrom,
+        'isLoaned': isLoaned,
+        'loanTo': loanTo,
         'imgPath': imgPath,
       };
 }

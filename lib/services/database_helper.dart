@@ -40,8 +40,9 @@ class DatabaseHelper {
             height INTEGER, number INTEGER,
             value INTEGER DEFAULT 0 NOT NULL, wage INTEGER DEFAULT 0 NOT NULL, releaseClause INTEGER,
             ability REAL, potential REAL,
-            isNationalTeam INTEGER DEFAULT 0 NOT NULL, isLoaned INTEGER DEFAULT 0 NOT NULL,
-            loanFrom TEXT, imgPath TEXT
+            isOnLoan INTEGER DEFAULT 0 NOT NULL, loanFrom TEXT,
+            isLoaned INTEGER DEFAULT 0 NOT NULL, loanTo TEXT,  
+            imgPath TEXT
           );""",
         );
       },
