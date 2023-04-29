@@ -208,6 +208,20 @@ class DatabaseHelper {
     return 0;
   }
 
+  static Future<int> getTotalWages(Team team) async {
+    final db = await _getDB();
+    int? value = Sqflite.firstIntValue(await db.query(
+      'Players',
+      columns: ['SUM(wage)'],
+      where: 'teamId = ?',
+      whereArgs: [team.id],
+    ));
+    if (value != null) {
+      return value;
+    }
+    return 0;
+  }
+
   static Future<List<Player>?> getAllPlayers(Team team) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(

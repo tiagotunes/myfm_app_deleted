@@ -23,11 +23,9 @@ samples, guidance on mobile development, and a full API reference.
 
 ## To be done
 
-- Add `isOnLOan` and `loanTo` to player model (show Player Tile with low opacity)
-- Financial Box 
-    - Bank Balance ?
-    - Transfer Budget
-    - Wage Budget (check if team is "overwaged" and see the difference)
+- Add to database balance in Team table
+- Maybe remove height attribute of a player
+- Check tutorials about how to use global variables (to use in currency options)
 
 ---
 
