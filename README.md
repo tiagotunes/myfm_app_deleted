@@ -26,6 +26,7 @@ samples, guidance on mobile development, and a full API reference.
 - Add to database balance in Team table
 - Maybe remove height and feet attributes of player
 - In players body, add search bar and filter options
+    - Search bar ignoring diacritics (á -> a)
     - Default: not showing Loaned out players
 - Check tutorials about how to use global variables (to use in currency options)
 
