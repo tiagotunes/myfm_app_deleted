@@ -18,9 +18,9 @@ class PlayerTile extends StatelessWidget {
       padding: EdgeInsets.all(getProportionateScreenWidth(4)),
       decoration: BoxDecoration(
         color: player.isOnLoan == 1
-            ? Colors.blue.withOpacity(0.1)
+            ? Colors.blue.withOpacity(0.2)
             : player.isLoanedOut == 1
-                ? Colors.purpleAccent.withOpacity(0.1)
+                ? Colors.purpleAccent.withOpacity(0.2)
                 : Colors.white,
         border: Border.all(
           color: player.isOnLoan == 1
@@ -33,7 +33,7 @@ class PlayerTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Opacity(
-        opacity: player.isLoanedOut == 1 ? 0.3 : 1.0,
+        opacity: player.isLoanedOut == 1 ? 1.0 : 1.0,
         child: Row(
           children: [
             buildPlayerImage(),

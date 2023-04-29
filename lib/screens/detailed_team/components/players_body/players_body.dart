@@ -18,88 +18,176 @@ class PlayersBody extends StatefulWidget {
 }
 
 class _PlayersBodyState extends State<PlayersBody> {
+  final searchCtr = TextEditingController();
+  bool showLoanPlayers = false;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Player>?>(
-      future: DatabaseHelper.getAllPlayers(widget.team),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasData) {
-          return ListView(
-            children: [
-              snapshot.data!.any((element) => element.naturalPosition == 'GK')
-                  ? buildPositionLabel('GK')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'GK'),
-              snapshot.data!.any((element) => element.naturalPosition == 'CB')
-                  ? buildPositionLabel('CB')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'CB'),
-              snapshot.data!.any((element) => element.naturalPosition == 'LB')
-                  ? buildPositionLabel('LB')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'LB'),
-              snapshot.data!.any((element) => element.naturalPosition == 'LWB')
-                  ? buildPositionLabel('LWB')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'LWB'),
-              snapshot.data!.any((element) => element.naturalPosition == 'RB')
-                  ? buildPositionLabel('RB')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'RB'),
-              snapshot.data!.any((element) => element.naturalPosition == 'RWB')
-                  ? buildPositionLabel('RWB')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'RWB'),
-              snapshot.data!.any((element) => element.naturalPosition == 'DM')
-                  ? buildPositionLabel('DM')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'DM'),
-              snapshot.data!.any((element) => element.naturalPosition == 'CM')
-                  ? buildPositionLabel('CM')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'CM'),
-              snapshot.data!.any((element) => element.naturalPosition == 'LM')
-                  ? buildPositionLabel('LM')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'LM'),
-              snapshot.data!.any((element) => element.naturalPosition == 'RM')
-                  ? buildPositionLabel('RM')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'RM'),
-              snapshot.data!.any((element) => element.naturalPosition == 'AMC')
-                  ? buildPositionLabel('AMC')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'AMC'),
-              snapshot.data!.any((element) => element.naturalPosition == 'AML')
-                  ? buildPositionLabel('AML')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'AML'),
-              snapshot.data!.any((element) => element.naturalPosition == 'AMR')
-                  ? buildPositionLabel('AMR')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'AMR'),
-              snapshot.data!.any((element) => element.naturalPosition == 'ST')
-                  ? buildPositionLabel('ST')
-                  : const SizedBox(),
-              buildPositionPlayers(snapshot.data!, 'ST'),
-            ],
-          );
-        } else {
-          return Center(
-            child: Text(
-              'No players in the team',
-              style: TextStyle(
-                color: kSecondaryColor.withOpacity(0.8),
-                fontSize: getProportionateScreenWidth(25),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          );
-        }
-      },
+    return Column(
+      children: [
+        buildFilterOptions(),
+        Expanded(
+          child: FutureBuilder<List<Player>?>(
+            future: DatabaseHelper.getAllPlayers(widget.team),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData) {
+                List<Player>? filteredPlayers = snapshot.data!
+                    .where((player) =>
+                        player.name.toLowerCase().contains(searchCtr.text))
+                    .where((player) => showLoanPlayers
+                        ? player.isLoanedOut == 1 || player.isLoanedOut == 0
+                        : player.isLoanedOut == 0)
+                    .toList();
+                return ListView(
+                  children: [
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'GK')
+                        ? buildPositionLabel('GK')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'GK'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'CB')
+                        ? buildPositionLabel('CB')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'CB'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'LB')
+                        ? buildPositionLabel('LB')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'LB'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'LWB')
+                        ? buildPositionLabel('LWB')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'LWB'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'RB')
+                        ? buildPositionLabel('RB')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'RB'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'RWB')
+                        ? buildPositionLabel('RWB')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'RWB'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'DM')
+                        ? buildPositionLabel('DM')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'DM'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'CM')
+                        ? buildPositionLabel('CM')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'CM'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'LM')
+                        ? buildPositionLabel('LM')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'LM'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'RM')
+                        ? buildPositionLabel('RM')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'RM'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'AMC')
+                        ? buildPositionLabel('AMC')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'AMC'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'AML')
+                        ? buildPositionLabel('AML')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'AML'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'AMR')
+                        ? buildPositionLabel('AMR')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'AMR'),
+                    filteredPlayers
+                            .any((element) => element.naturalPosition == 'ST')
+                        ? buildPositionLabel('ST')
+                        : const SizedBox(),
+                    buildPositionPlayers(filteredPlayers, 'ST'),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    'No players in the team',
+                    style: TextStyle(
+                      color: kSecondaryColor.withOpacity(0.8),
+                      fontSize: getProportionateScreenWidth(25),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding buildFilterOptions() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(10),
+        vertical: getProportionateScreenHeight(8),
+      ),
+      child: Row(
+        children: [
+          buildSearchBar(),
+          SizedBox(width: getProportionateScreenWidth(10)),
+          buildFilterButton(),
+        ],
+      ),
+    );
+  }
+
+  Ink buildFilterButton() {
+    return Ink(
+      decoration: ShapeDecoration(
+        color: kSecondaryColor.withOpacity(0.2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+      child: IconButton(
+        icon: const Icon(Icons.filter_alt_outlined),
+        onPressed: () {
+          setState(() {
+            showLoanPlayers = !showLoanPlayers;
+          });
+        },
+      ),
+    );
+  }
+
+  Expanded buildSearchBar() {
+    return Expanded(
+      child: TextFormField(
+        controller: searchCtr,
+        onChanged: (value) {
+          setState(() {});
+        },
+        decoration: InputDecoration(
+          labelText: 'Search',
+          contentPadding: EdgeInsets.all(getProportionateScreenWidth(5)),
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                searchCtr.clear();
+              });
+            },
+            icon: const Icon(Icons.clear),
+          ),
+        ),
+      ),
     );
   }
 
