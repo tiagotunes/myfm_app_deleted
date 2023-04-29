@@ -41,7 +41,7 @@ class DatabaseHelper {
             value INTEGER DEFAULT 0 NOT NULL, wage INTEGER DEFAULT 0 NOT NULL, releaseClause INTEGER,
             ability REAL, potential REAL,
             isOnLoan INTEGER DEFAULT 0 NOT NULL, loanFrom TEXT,
-            isLoaned INTEGER DEFAULT 0 NOT NULL, loanTo TEXT,  
+            isLoanedOut INTEGER DEFAULT 0 NOT NULL, loanTo TEXT,  
             imgPath TEXT
           );""",
         );
@@ -138,12 +138,12 @@ class DatabaseHelper {
     return List.generate(maps.length, (index) => Team.fromJson(maps[index]));
   }
 
-  static Future<int> getNumberPlayers(Team team) async {
+  static Future<int> getNumberPlayers(Team team, bool flag) async {
     final db = await _getDB();
     int? count = Sqflite.firstIntValue(await db.query(
       'Players',
       columns: ['COUNT(*)'],
-      where: 'teamId = ?',
+      where: flag ? 'teamId = ? AND isLoanedOut = 0' : 'teamId = ?',
       whereArgs: [team.id],
     ));
     return count!;
@@ -151,7 +151,7 @@ class DatabaseHelper {
 
   static Future<double> getAvgPlayersAge(Team team) async {
     double avg = 0;
-    int total = await DatabaseHelper.getNumberPlayers(team);
+    int total = await DatabaseHelper.getNumberPlayers(team, false);
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
       'Players',
@@ -170,7 +170,7 @@ class DatabaseHelper {
     return team.year - avg;
   }
 
-  static Future<int> getNumberForeigPlayers(Team team) async {
+  static Future<int> getNumberForeignPlayers(Team team) async {
     final db = await _getDB();
     int? count = Sqflite.firstIntValue(await db.query(
       'Players',
@@ -181,7 +181,7 @@ class DatabaseHelper {
     return count!;
   }
 
-  static Future<List<Player>?> getForeigPlayers(Team team) async {
+  static Future<List<Player>?> getForeignPlayers(Team team) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
       'Players',

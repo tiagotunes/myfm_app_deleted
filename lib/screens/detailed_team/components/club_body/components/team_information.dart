@@ -22,6 +22,7 @@ class _TeamInformationState extends State<TeamInformation> {
   var f = NumberFormat("##.#");
   var fV = NumberFormat('###,###,###');
   int nPlayers = 0;
+  int nAPlayers = 0;
   int nForeignPlayers = 0;
   List<Player>? foreignPlayers;
   double perForeignPlayers = 0;
@@ -29,14 +30,21 @@ class _TeamInformationState extends State<TeamInformation> {
   int squadValue = 0;
 
   void _updateTeamInfo() async {
-    nPlayers = await DatabaseHelper.getNumberPlayers(widget.team);
+    nPlayers = await DatabaseHelper.getNumberPlayers(widget.team, true);
+    nAPlayers = await DatabaseHelper.getNumberPlayers(widget.team, false);
     avgAge = await DatabaseHelper.getAvgPlayersAge(widget.team);
-    nForeignPlayers = await DatabaseHelper.getNumberForeigPlayers(widget.team);
-    foreignPlayers = await DatabaseHelper.getForeigPlayers(widget.team);
+    nForeignPlayers = await DatabaseHelper.getNumberForeignPlayers(widget.team);
+    foreignPlayers = await DatabaseHelper.getForeignPlayers(widget.team);
     if (foreignPlayers != null) {
-      foreignPlayers!.sort((a, b) => a.nation.compareTo(b.nation));
+      foreignPlayers!.sort((a, b) {
+        int comparison = a.nation.compareTo(b.nation);
+        if (comparison == 0) {
+          return a.name.compareTo(b.name);
+        }
+        return comparison;
+      });
     }
-    perForeignPlayers = nPlayers == 0 ? 0 : nForeignPlayers / nPlayers;
+    perForeignPlayers = nPlayers == 0 ? 0 : nForeignPlayers / nAPlayers;
     squadValue = await DatabaseHelper.getSquadValue(widget.team);
     setState(() {});
   }
@@ -80,13 +88,27 @@ class _TeamInformationState extends State<TeamInformation> {
               controller: ScrollController(keepScrollOffset: false),
               shrinkWrap: true,
               children: [
-                buildInformationItem(Icons.groups, nPlayers, 'Total players'),
+                buildInformationItem(
+                  Icons.groups,
+                  nPlayers,
+                  nAPlayers,
+                  'Total players',
+                ),
                 buildInformationItem1(
-                    Icons.calendar_today, avgAge, 'Average age\nof players'),
+                  Icons.calendar_today,
+                  avgAge,
+                  'Average age\nof players',
+                ),
                 buildInformationItem2(
-                    perForeignPlayers, nForeignPlayers, 'Foreign players'),
+                  perForeignPlayers,
+                  nForeignPlayers,
+                  'Foreign players',
+                ),
                 buildInformationItem3(
-                    Icons.monetization_on_outlined, squadValue, 'Squad value'),
+                  Icons.monetization_on_outlined,
+                  squadValue,
+                  'Squad value',
+                ),
               ],
             ),
           )
@@ -196,7 +218,18 @@ class _TeamInformationState extends State<TeamInformation> {
                     children: [
                       SvgPicture.asset(foreignPlayers![index].nationFlag),
                       SizedBox(width: getProportionateScreenWidth(8)),
-                      Text(foreignPlayers![index].name)
+                      Container(
+                        padding: EdgeInsets.all(getProportionateScreenWidth(4)),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: foreignPlayers![index].isLoanedOut == 1
+                              ? Colors.purpleAccent.withOpacity(0.2)
+                              : foreignPlayers![index].isOnLoan == 1
+                                  ? Colors.blue.withOpacity(0.2)
+                                  : Colors.white,
+                        ),
+                        child: Text(foreignPlayers![index].name),
+                      )
                     ],
                   ),
                 ),
@@ -237,7 +270,8 @@ class _TeamInformationState extends State<TeamInformation> {
     );
   }
 
-  Column buildInformationItem(IconData icon, int number, String text) {
+  Column buildInformationItem(
+      IconData icon, int number1, int number2, String text) {
     return Column(
       children: [
         Icon(
@@ -247,7 +281,9 @@ class _TeamInformationState extends State<TeamInformation> {
         ),
         const Spacer(),
         Text(
-          fV.format(number),
+          number1 == number2
+              ? fV.format(number1)
+              : "${fV.format(number1)} (${fV.format(number2)})",
           style: TextStyle(
             color: kPrimaryColor,
             fontSize: getProportionateScreenWidth(18),

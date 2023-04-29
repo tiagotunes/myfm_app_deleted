@@ -376,20 +376,52 @@ class PlayerCard extends StatelessWidget {
     );
   }
 
-  Row buildTopHeader(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Column buildTopHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: getProportionateScreenWidth(10)),
-        Expanded(
-          child: Text(
-            player.name,
-            style: TextStyle(
-                fontSize: getProportionateScreenWidth(20),
-                fontWeight: FontWeight.bold),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: getProportionateScreenWidth(10)),
+            Expanded(
+              child: Text(
+                player.name,
+                style: TextStyle(
+                    fontSize: getProportionateScreenWidth(20),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            buildIcons(context),
+          ],
         ),
-        buildIcons(context),
+        player.isOnLoan == 1
+            ? Row(
+                children: [
+                  SizedBox(width: getProportionateScreenWidth(10)),
+                  Text(
+                    'On loan from ${player.loanFrom}',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: getProportionateScreenWidth(14),
+                    ),
+                  ),
+                ],
+              )
+            : player.isLoanedOut == 1
+                ? Row(
+                    children: [
+                      SizedBox(width: getProportionateScreenWidth(10)),
+                      Text(
+                        'Loaned out to ${player.loanTo}',
+                        style: TextStyle(
+                          color: Colors.purpleAccent,
+                          fontSize: getProportionateScreenWidth(14),
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
       ],
     );
   }
@@ -461,7 +493,7 @@ class PlayerCard extends StatelessWidget {
               arguments: {
                 'user': user,
                 'team': team,
-                'index': 3,
+                'index': 1,
               },
             );
           },

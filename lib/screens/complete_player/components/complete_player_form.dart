@@ -52,7 +52,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   double potentialSlider = 0;
   bool isOnLoan = false;
   final loanFromCtr = TextEditingController();
-  bool isLoaned = false;
+  bool isLoanedOut = false;
   final loanToCtr = TextEditingController();
   final imgPathCtr = TextEditingController();
 
@@ -89,6 +89,14 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
       }
       if (widget.player!.potential != null) {
         potentialSlider = widget.player!.potential!;
+      }
+      if (widget.player!.isOnLoan==1) {
+        isOnLoan = true;
+        loanFromCtr.text = widget.player!.loanFrom!;
+      }
+      if (widget.player!.isLoanedOut==1) {
+        isLoanedOut = true;
+        loanToCtr.text = widget.player!.loanTo!;
       }
       if (widget.player!.imgPath != null) {
         imgPathCtr.text = widget.player!.imgPath!;
@@ -229,7 +237,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
                   ability: abilitySlider,
                   potential: potentialSlider,
                   isOnLoan: isOnLoan ? 1 : 0, loanFrom: isOnLoan ? loanFromCtr.text : null,
-                  isLoaned: isLoaned ? 1 : 0, loanTo: isLoaned ? loanToCtr.text : null,
+                  isLoanedOut: isLoanedOut ? 1 : 0, loanTo: isLoanedOut ? loanToCtr.text : null,
                   imgPath: imgPathCtr.text.isEmpty ? null : imgPathCtr.text,
                   id: widget.player != null ? widget.player!.id : null,
                 );
@@ -313,32 +321,32 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
   TextFormField buildLoanedFormField() {
     return TextFormField(
       enabled: !isOnLoan,
-      readOnly: !isLoaned,
+      readOnly: !isLoanedOut,
       controller: loanToCtr,
       onChanged: (value) {
         errors.clear();
-        if (!isLoaned || value.isNotEmpty) {
+        if (!isLoanedOut || value.isNotEmpty) {
           removeError(kPlayerLoanToNullError);
         }
       },
       validator: (value) {
-        if (isLoaned && value!.isEmpty) {
+        if (isLoanedOut && value!.isEmpty) {
           addError(kPlayerLoanToNullError);
           return "";
         }
         return null;
       },
       decoration: InputDecoration(
-        labelText: 'Loaned',
+        labelText: 'Loaned out',
         hintText: 'Loan to',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: const Icon(Icons.join_right_outlined),
         prefixIcon: Checkbox(
-          value: isLoaned,
+          value: isLoanedOut,
           activeColor: kPrimaryColor,
           onChanged: (value) {
             setState(() {
-              isLoaned = value!;
+              isLoanedOut = value!;
             });
           },
         ),
@@ -348,7 +356,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
 
   TextFormField buildOnLoanFormField() {
     return TextFormField(
-      enabled: !isLoaned,
+      enabled: !isLoanedOut,
       readOnly: !isOnLoan,
       controller: loanFromCtr,
       onChanged: (value) {
@@ -365,7 +373,7 @@ class _CompletePlayerFormState extends State<CompletePlayerForm> {
         return null;
       },
       decoration: InputDecoration(
-        labelText: 'On Loan',
+        labelText: 'On loan',
         hintText: 'Loan from',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: const Icon(Icons.join_left_outlined),

@@ -8,7 +8,7 @@ class Player {
   final int? height, number;
   final int? value, wage, releaseClause;
   final double? ability, potential;
-  final int? isLoaned, isOnLoan;
+  final int? isOnLoan, isLoanedOut;
   final String? loanFrom, loanTo;
   final String? imgPath;
 
@@ -34,7 +34,7 @@ class Player {
     this.potential,
     this.isOnLoan,
     this.loanFrom,
-    this.isLoaned,
+    this.isLoanedOut,
     this.loanTo,
     this.imgPath,
   });
@@ -61,7 +61,7 @@ class Player {
         potential: json['potential'],
         isOnLoan: json['isOnLoan'],
         loanFrom: json['loanFrom'],
-        isLoaned: json['isLoaned'],
+        isLoanedOut: json['isLoanedOut'],
         loanTo: json['loanTo'],
         imgPath: json['imgPath'],
       );
@@ -88,7 +88,7 @@ class Player {
         'potential': potential,
         'isOnLoan': isOnLoan,
         'loanFrom': loanFrom,
-        'isLoaned': isLoaned,
+        'isLoanedOut': isLoanedOut,
         'loanTo': loanTo,
         'imgPath': imgPath,
       };
