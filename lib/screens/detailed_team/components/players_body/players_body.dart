@@ -1,4 +1,6 @@
+import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfm_app/constants.dart';
 import 'package:myfm_app/models/player_model.dart';
 import 'package:myfm_app/models/team_model.dart';
@@ -20,6 +22,39 @@ class PlayersBody extends StatefulWidget {
 class _PlayersBodyState extends State<PlayersBody> {
   final searchCtr = TextEditingController();
   bool showLoanPlayers = false;
+  bool selectAllPos = true;
+  List<String> posTags = [
+    'GK',
+    'CB',
+    'LB',
+    'LWB',
+    'RB',
+    'RWB',
+    'DM',
+    'CM',
+    'LM',
+    'RM',
+    'AMC',
+    'AML',
+    'AMR',
+    'ST'
+  ];
+  List<String> posOpts = [
+    'GK',
+    'CB',
+    'LB',
+    'LWB',
+    'RB',
+    'RWB',
+    'DM',
+    'CM',
+    'LM',
+    'RM',
+    'AMC',
+    'AML',
+    'AMR',
+    'ST'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +72,9 @@ class _PlayersBodyState extends State<PlayersBody> {
                 List<Player>? filteredPlayers = snapshot.data!
                     .where((player) =>
                         player.name.toLowerCase().contains(searchCtr.text))
-                    .where((player) => showLoanPlayers
-                        ? player.isLoanedOut == 1 || player.isLoanedOut == 0
-                        : player.isLoanedOut == 0)
+                    .where((player) =>
+                        showLoanPlayers ? true : player.isLoanedOut == 0)
+                    .where((player) => posTags.contains(player.naturalPosition))
                     .toList();
                 return ListView(
                   children: [
@@ -157,13 +192,149 @@ class _PlayersBodyState extends State<PlayersBody> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       child: IconButton(
-        icon: const Icon(Icons.filter_alt_outlined),
-        onPressed: () {
-          setState(() {
-            showLoanPlayers = !showLoanPlayers;
-          });
+        icon: const Icon(Icons.filter_list),
+        onPressed: () async {
+          await buildFilterModal();
+          setState(() {});
         },
       ),
+    );
+  }
+
+  Future<bool?> buildFilterModal() {
+    return showModalBottomSheet<bool>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenWidth(8),
+                  horizontal: getProportionateScreenWidth(12),
+                ),
+                child: SizedBox(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Apply'),
+                      ),
+                      buildShowLoanPlayersFilter(setState),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: getProportionateScreenWidth(10),
+                          bottom: getProportionateScreenWidth(5),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Position',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: getProportionateScreenWidth(15),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                right: getProportionateScreenWidth(8),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (selectAllPos) {
+                                      posTags = [];
+                                    } else {
+                                      posTags = posOpts;
+                                    }
+                                    selectAllPos = !selectAllPos;
+                                  });
+                                },
+                                child: SvgPicture.asset(
+                                  selectAllPos
+                                      ? 'assets/icons/selectAll.svg'
+                                      : 'assets/icons/selectAllOff.svg',
+                                  width: getProportionateScreenWidth(26),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      buildPositionFilter(setState),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Container buildPositionFilter(StateSetter setState) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black26, width: 2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ChipsChoice<String>.multiple(
+        value: posTags,
+        onChanged: (value) {
+          setState(() {
+            posTags = value;
+          });
+        },
+        choiceItems: C2Choice.listFrom(
+          source: posOpts,
+          value: (index, item) => item,
+          label: (index, item) => item,
+        ),
+        choiceStyle: const C2ChoiceStyle(
+            color: kPrimaryColor,
+            borderColor: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+        choiceActiveStyle: C2ChoiceStyle(
+            color: Colors.white,
+            backgroundColor: Colors.black.withOpacity(0.9),
+            borderRadius: const BorderRadius.all(Radius.circular(12))),
+      ),
+    );
+  }
+
+  Row buildShowLoanPlayersFilter(StateSetter setState) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Loaned out players',
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: getProportionateScreenWidth(15),
+          ),
+        ),
+        Switch(
+          value: showLoanPlayers,
+          activeColor: kPrimaryColor,
+          onChanged: (value) {
+            setState(() {
+              showLoanPlayers = value;
+            });
+          },
+        )
+      ],
     );
   }
 

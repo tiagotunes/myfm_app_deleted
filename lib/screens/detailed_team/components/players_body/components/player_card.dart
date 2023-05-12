@@ -292,10 +292,12 @@ class PlayerCard extends StatelessWidget {
           width: getProportionateScreenWidth(23),
         ),
         SizedBox(width: getProportionateScreenWidth(7)),
-        Text(
-          player.nation,
-          style: TextStyle(
-            fontSize: getProportionateScreenWidth(13),
+        Expanded(
+          child: Text(
+            player.nation,
+            style: TextStyle(
+              fontSize: getProportionateScreenWidth(13),
+            ),
           ),
         ),
       ],
